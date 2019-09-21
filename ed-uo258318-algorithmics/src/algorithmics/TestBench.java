@@ -69,7 +69,7 @@ public class TestBench {
 			
 			for (long i = 0; i < samples; i++) {
 				startTime = System.currentTimeMillis();
-				testAlgorithm(CLASSNAME, methodName, endN);
+				testAlgorithm(CLASSNAME, methodName, j);
 				endTime = System.currentTimeMillis();
 
 				totalTime += endTime - startTime;
