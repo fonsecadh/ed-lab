@@ -53,7 +53,7 @@ public class Algorithms {
 		return n * factorialRec(n - 1);
 	}
 	
-	// Complexity: ?
+	// Complexity: O(n)
 	public static long pow(long n) {
 		long result = 1;
 		
@@ -65,7 +65,7 @@ public class Algorithms {
 		return result;		
 	}
 	
-	// Complexity: ?
+	// Complexity: O(2^n)
 	public static long powRec1(long n) {
 		TestBench.doNothing(n);
 		
@@ -76,7 +76,7 @@ public class Algorithms {
 		return powRec1(n - 1) + powRec1(n - 1);
 	}
 	
-	// Complexity: ?
+	// Complexity: O(n)
 	public static long powRec2(long n) {
 		TestBench.doNothing(n);
 		
@@ -87,7 +87,7 @@ public class Algorithms {
 		return 2 * powRec2(n - 1);
 	}
 	
-	// Complexity: ?
+	// Complexity: O(log n)
 	public static long powRec3(long n) {
 		TestBench.doNothing(n);
 		
@@ -95,8 +95,7 @@ public class Algorithms {
 			return 1;
 		}
 		
-		long subres = powRec3(n / 2);
-		long result = subres * subres;
+		long result = powRec3(n / 2) * powRec3(n / 2);
 		
 		if (n % 2 != 0) {
 			result *= 2;
@@ -105,7 +104,7 @@ public class Algorithms {
 		return result;		
 	}
 	
-	// Complexity: ?
+	// Complexity: O(log n)
 	public static long powRec4(long n) {
 		TestBench.doNothing(n);
 		
