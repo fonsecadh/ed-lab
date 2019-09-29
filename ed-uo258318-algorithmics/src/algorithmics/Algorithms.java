@@ -87,7 +87,7 @@ public class Algorithms {
 		return 2 * powRec2(n - 1);
 	}
 	
-	// Complexity: O(log n)
+	// Complexity: O(n log n)
 	public static long powRec3(long n) {
 		TestBench.doNothing(n);
 		
