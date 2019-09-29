@@ -10,7 +10,8 @@ public class TestBench {
 	public static final int SAMPLES = 3;
 	public static final int STARTN = 1;
 	public static final int ENDN = 50;
-	public static final int ENDN_CUBIC = 20;	
+	public static final int ENDN_CUBIC = 20;
+	public static final int ENDN_POWREC1 = 12;
 	public static final int SLEEP_TIME = 2;
 	
 	public static final String LINEAR = "linear.csv";
@@ -18,16 +19,30 @@ public class TestBench {
 	public static final String CUBIC = "cubic.csv";
 	public static final String LOGARITHMIC = "logarithmic.csv";
 	
+	public static final String POWREC1 = "powrec1.csv";
+	public static final String POWREC2 = "powrec2.csv";
+	public static final String POWREC3 = "powrec3.csv";
+	public static final String POWREC4 = "powrec4.csv";
+	
 	public static final String CLASSNAME = "algorithmics.Algorithms";
 	
 	
 
 	// Methods
 	public static void main(String[] args) {
-		TestBench.test(LINEAR, SAMPLES, STARTN, ENDN, "linear");
-		TestBench.test(QUADRATIC, SAMPLES, STARTN, ENDN, "quadratic");
-		TestBench.test(CUBIC, SAMPLES, STARTN, ENDN_CUBIC, "cubic");
-		TestBench.test(LOGARITHMIC, SAMPLES, STARTN, ENDN, "logarithmic");		
+		
+		// First Lab Session
+//		TestBench.test(LINEAR, SAMPLES, STARTN, ENDN, "linear");
+//		TestBench.test(QUADRATIC, SAMPLES, STARTN, ENDN, "quadratic");
+//		TestBench.test(CUBIC, SAMPLES, STARTN, ENDN_CUBIC, "cubic");
+//		TestBench.test(LOGARITHMIC, SAMPLES, STARTN, ENDN, "logarithmic");		
+		
+		// Second Lab Session
+		TestBench.test(POWREC1, SAMPLES, STARTN, ENDN_POWREC1, "powRec1");
+		TestBench.test(POWREC2, SAMPLES, STARTN, ENDN, "powRec2");
+		TestBench.test(POWREC3, SAMPLES, STARTN, ENDN, "powRec3");
+		TestBench.test(POWREC4, SAMPLES, STARTN, ENDN, "powRec4");
+		
 	}
 
 	public static void test(String outputFilename, 

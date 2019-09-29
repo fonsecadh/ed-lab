@@ -95,8 +95,8 @@ public class Algorithms {
 			return 1;
 		}
 		
-		long subresult = powRec3(n / 2);
-		long result = subresult * subresult;
+		long subres = powRec3(n / 2);
+		long result = subres * subres;
 		
 		if (n % 2 != 0) {
 			result *= 2;
@@ -113,8 +113,8 @@ public class Algorithms {
 			return 1;
 		}
 		
-		long subresult = powRec4(n / 2);
-		long result = subresult * subresult;
+		long subres = powRec4(n / 2);
+		long result = subres * subres;
 		
 		if (n % 2 != 0) {
 			result *= 2;
