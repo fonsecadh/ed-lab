@@ -8,6 +8,16 @@ public class GraphNode<T> {
 	
 	
 	
+	// Constructors
+	public GraphNode() {
+		// Empty constructor
+	}
+	
+	public GraphNode(T element) {
+		setElement(element);
+	}
+	
+
 	// Getters
 	public T getElement() {
 		return element;
