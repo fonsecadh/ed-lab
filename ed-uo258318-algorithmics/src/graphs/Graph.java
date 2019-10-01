@@ -1,6 +1,7 @@
 package graphs;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Graph<T> {
 	
@@ -54,7 +55,12 @@ public class Graph<T> {
 	
 	// Methods
 	public int getNode(T element) {
-		return nodes.indexOf(element);
+		return nodes.indexOf(
+				nodes
+					.stream()
+					.filter(n -> n.getElement().equals(element))
+					.collect(Collectors.toList()).get(0)
+				); 
 	}
 
 	public int getSize() {
