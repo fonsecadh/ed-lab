@@ -144,6 +144,7 @@ public class Graph<T> {
 		
 		int currentSize = getSize();
 		
+		// We initialize the vectors for the new node
 		for (int i = 0; i < currentSize; i++) {
 			edges[currentSize][i] = false;
 			edges[i][currentSize] = false;
@@ -223,6 +224,7 @@ public class Graph<T> {
 		
 		int currentSize = getSize();
 		
+		// Replacing elements from the vectors of last node to the removed node
 		for (int i = 0; i < currentSize; i++) {
 			edges[i][eleIndex] = edges[i][currentSize];
 			edges[eleIndex][i] = edges[currentSize][i];
@@ -230,6 +232,7 @@ public class Graph<T> {
 			weights[i][eleIndex] = weights[i][currentSize];
 		}		
 		
+		// Replacing the diagonal vector elements
 		weights[eleIndex][eleIndex] = weights[currentSize][currentSize];
 		edges[eleIndex][eleIndex] = edges[currentSize][currentSize];
 	}
@@ -255,5 +258,77 @@ public class Graph<T> {
 		weights[oriIndex][destIndex] = 0;
 		edges[oriIndex][destIndex] = false;
 	}	
+	
+	/**
+	 * Checks whether the given node is a drain node or not.
+	 * 
+	 * A drain node is a node which only has incoming edges.
+	 * 
+	 * @param element
+	 * 			The element identifying the node.
+	 * @return
+	 * 			Whether the given node is a drain node or not.
+	 */
+	public boolean isDrainNode(T element) {
+		int currentSize = getSize();
+		int pos = getNode(element);
+		
+		for (int i = 0; i < currentSize; i++) {
+			if (edges[pos][i] == true) {
+				return false;
+			}
+		}
+		
+		return true;		
+	}
+	
+	/**
+	 * Checks whether the given node is a source node or not.
+	 * 
+	 * A source node is a node which only has outgoing edges.
+	 * 
+	 * @param element
+	 * 			The element identifying the node.
+	 * @return
+	 * 			Whether the given node is a source node or not.
+	 */
+	public boolean isSourceNode(T element) {
+		int currentSize = getSize();
+		int pos = getNode(element);
+		
+		for (int i = 0; i < currentSize; i++) {
+			if (edges[i][pos] == true) {
+				return false;
+			}
+		}
+		
+		return true;		
+	}
+	
+	/**
+	 * Returns the number of drain nodes of the graph.
+	 * 
+	 * @return
+	 * 			The number of drain nodes of the graph.
+	 */
+	public int countDrainNodes() {
+		return nodes
+				.parallelStream()
+				.filter(node -> isDrainNode(node.getElement()))
+				.collect(Collectors.toList()).size();	
+	}
+	
+	/**
+	 * Returns the number of source nodes of the graph.
+	 * 
+	 * @return
+	 * 			The number of source nodes of the graph.
+	 */
+	public int countSourceNodes() {
+		return nodes
+				.parallelStream()
+				.filter(node -> isSourceNode(node.getElement()))
+				.collect(Collectors.toList()).size();			
+	}
 
 }
