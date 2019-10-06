@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 public class Graph<T> {
 	
 	// Constants
+	
+	/**
+	 * When the index of a node is not found in the graph.
+	 */
 	public static final int INDEX_NOT_FOUND = -1;
 	
 	// Attributes
