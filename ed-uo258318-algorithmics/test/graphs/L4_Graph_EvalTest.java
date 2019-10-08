@@ -27,7 +27,7 @@ public class L4_Graph_EvalTest {
 		 assertEquals(1, g1.getSize());
 		 assertEquals(0,  g1.getNode('a'));
 		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeight());
+		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
 		
 		 // Test nodes for nodes not found
 		 assertEquals(Graph.INDEX_NOT_FOUND,  g1.getNode('b'));
@@ -60,7 +60,7 @@ public class L4_Graph_EvalTest {
 		 assertEquals(2, g1.getNode('c'));
 			
 		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeight());
+		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 // Testing edges
 		 try
@@ -82,7 +82,7 @@ public class L4_Graph_EvalTest {
 		 }
 		 
 		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeight());
+		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 try
 		 {
@@ -103,7 +103,7 @@ public class L4_Graph_EvalTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 3.0, 0.0}, 
 			 {0.0, 0.0, 5.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 
 		 // SOURCES
@@ -142,7 +142,7 @@ public class L4_Graph_EvalTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 0.0, 0.0}, 
 			 {5.0, 0.0, 5.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 try
 		 {

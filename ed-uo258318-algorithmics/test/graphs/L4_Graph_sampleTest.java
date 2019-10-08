@@ -27,7 +27,7 @@ public class L4_Graph_sampleTest {
 		 assertEquals(1, g1.getSize());
 		 assertEquals(0,  g1.getNode('a'));
 		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeight());
+		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
 		
 		 // Test nodes for nodes not found
 		 assertEquals(Graph.INDEX_NOT_FOUND,  g1.getNode('b'));
@@ -66,7 +66,7 @@ public class L4_Graph_sampleTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 0.0, 0.0}, 
 			 {0.0, 0.0, 0.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 // Testing edges
 		 try
@@ -95,7 +95,7 @@ public class L4_Graph_sampleTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 0.0, 0.0}, 
 			 {0.0, 0.0, 0.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 try
 		 {
@@ -114,7 +114,7 @@ public class L4_Graph_sampleTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 0.0, 0.0}, 
 			 {0.0, 0.0, 5.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 try
 		 {
@@ -133,7 +133,7 @@ public class L4_Graph_sampleTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 2.0, 0.0}, 
 			 {0.0, 0.0, 5.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 try
 		 {
@@ -152,7 +152,7 @@ public class L4_Graph_sampleTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 2.0, 1.0}, 
 			 {0.0, 0.0, 5.0}, 
-			 {0.0, 0.0, 0.0}}, g1.getWeight());
+			 {0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 try
 		 {
@@ -171,7 +171,7 @@ public class L4_Graph_sampleTest {
 		 assertArrayEquals (new double[][]{
 			 {0.0, 2.0, 1.0}, 
 			 {0.0, 0.0, 5.0}, 
-			 {3.0, 0.0, 0.0}}, g1.getWeight());
+			 {3.0, 0.0, 0.0}}, g1.getWeights());
 		
 		 
 		 try
@@ -190,7 +190,7 @@ public class L4_Graph_sampleTest {
 	 assertArrayEquals (new double[][]{
 		 {0.0, 0.0, 1.0}, 
 		 {5.0, 0.0, 5.0}, 
-		 {3.0, 0.0, 0.0}}, g1.getWeight());
+		 {3.0, 0.0, 0.0}}, g1.getWeights());
 	}
 }
 

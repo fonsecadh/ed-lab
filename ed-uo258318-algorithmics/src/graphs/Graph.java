@@ -81,7 +81,7 @@ public class Graph<T> {
 		return edges;
 	}
 
-	public double[][] getWeight() {
+	public double[][] getWeights() {
 		return weights;
 	}
 
@@ -95,7 +95,7 @@ public class Graph<T> {
 		this.edges = edges;
 	}
 
-	public void setWeight(double[][] weight) {
+	public void setWeights(double[][] weight) {
 		this.weights = weight;
 	}
 	
@@ -153,7 +153,7 @@ public class Graph<T> {
 		
 		nodes.add(new GraphNode<T>(element));
 		
-		int currentSize = getSize();
+		int currentSize = getSize() - 1;
 		
 		// We initialize the vectors for the new node
 		for (int i = 0; i < currentSize; i++) {
@@ -286,11 +286,19 @@ public class Graph<T> {
 	public boolean isDrainNode(T element) {
 		int currentSize = getSize();
 		int pos = getNode(element);
+		int countIncomingEdges = 0;
 		
 		for (int i = 0; i < currentSize; i++) {
 			if (edges[pos][i] == true) {
 				return false;
 			}
+			if (edges[i][pos]) {
+				countIncomingEdges++;
+			}
+		}	
+		
+		if (countIncomingEdges == 0) {
+			return false;
 		}
 		
 		return true;		
@@ -309,11 +317,19 @@ public class Graph<T> {
 	public boolean isSourceNode(T element) {
 		int currentSize = getSize();
 		int pos = getNode(element);
+		int countOutgoingEdges = 0;
 		
 		for (int i = 0; i < currentSize; i++) {
 			if (edges[i][pos] == true) {
 				return false;
 			}
+			if (edges[pos][i] == true) {
+				countOutgoingEdges++;
+			}
+		}
+		
+		if (countOutgoingEdges == 0) {
+			return false;
 		}
 		
 		return true;		

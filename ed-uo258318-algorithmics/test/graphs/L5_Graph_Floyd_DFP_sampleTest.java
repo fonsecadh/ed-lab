@@ -54,7 +54,7 @@ class L5_Graph_Floyd_DFP_sampleTest {
 			 {0.0, 3.0, 0.0, 0.0}, 
 			 {0.0, 0.0, 1.0, 3.0}, 
 			 {0.0, 0.0, 0.0, 1.0},
-			 {3.0, 0.0, 0.0, 0.0}}, g1.getWeight());
+			 {3.0, 0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 
 		 // TRAVERSE
@@ -101,7 +101,7 @@ class L5_Graph_Floyd_DFP_sampleTest {
 			 {0.0, 3.0, 0.0, 0.0}, 
 			 {0.0, 0.0, 1.0, 3.0}, 
 			 {2.0, 0.0, 0.0, 1.0},
-			 {3.0, 0.0, 0.0, 0.0}}, g1.getWeight());
+			 {3.0, 0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 
 		 // TRAVERSE
@@ -148,7 +148,7 @@ class L5_Graph_Floyd_DFP_sampleTest {
 			 {0.0, 0.0, 0.0, 0.0}, 
 			 {3.0, 0.0, 0.0, 3.0}, 
 			 {2.0, 1.0, 0.0, 1.0},
-			 {3.0, 0.0, 0.0, 0.0}}, g1.getWeight());
+			 {3.0, 0.0, 0.0, 0.0}}, g1.getWeights());
 		 
 		 
 		 // TRAVERSE
