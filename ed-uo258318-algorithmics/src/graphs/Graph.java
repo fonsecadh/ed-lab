@@ -220,21 +220,24 @@ public class Graph<T> {
 			throw new Exception("Node does not exist.");
 		}
 		
-		nodes.remove(eleIndex);
-		
-		int currentSize = getSize();
+		// We get the last index in the matrices
+		int lastIndex = getSize() - 1;
 		
 		// Replacing elements from the vectors of last node to the removed node
-		for (int i = 0; i < currentSize; i++) {
-			edges[i][eleIndex] = edges[i][currentSize];
-			edges[eleIndex][i] = edges[currentSize][i];
-			weights[eleIndex][i] = weights[currentSize][i];
-			weights[i][eleIndex] = weights[i][currentSize];
+		for (int i = 0; i < lastIndex; i++) {
+			edges[i][eleIndex] = edges[i][lastIndex];
+			edges[eleIndex][i] = edges[lastIndex][i];
+			weights[eleIndex][i] = weights[lastIndex][i];
+			weights[i][eleIndex] = weights[i][lastIndex];
 		}		
 		
 		// Replacing the diagonal vector elements
-		weights[eleIndex][eleIndex] = weights[currentSize][currentSize];
-		edges[eleIndex][eleIndex] = edges[currentSize][currentSize];
+		weights[eleIndex][eleIndex] = weights[lastIndex][lastIndex];
+		edges[eleIndex][eleIndex] = edges[lastIndex][lastIndex];
+		
+		// We update the list
+		nodes.set(eleIndex, nodes.get(lastIndex));
+		nodes.remove(lastIndex);
 	}
 	
 	/**
