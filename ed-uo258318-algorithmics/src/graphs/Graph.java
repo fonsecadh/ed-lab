@@ -20,6 +20,17 @@ public class Graph<T> {
 	 * When the index of a node is not found in the graph.
 	 */
 	public static final int INDEX_NOT_FOUND = -1;
+
+	/**
+	 * Infinite cost for traveling from one node to the other.
+	 */
+	public static final double INFINITE = Double.POSITIVE_INFINITY;
+	
+	/**
+	 * For the Floyd's P vector
+	 */
+	public static final int EMPTY = -1;
+	
 	
 	// Attributes
 	
@@ -332,6 +343,73 @@ public class Graph<T> {
 				.parallelStream()
 				.filter(node -> isSourceNode(node.getElement()))
 				.collect(Collectors.toList()).size();			
+	}
+
+
+	
+	// Advanced Methods
+	
+	/**
+	 * Traverses the graph using a Depth-First Search and then
+	 * returns a string with the visited nodes in order.
+	 * 
+	 * @param element
+	 * 			Element of the starting node.
+	 * @return
+	 * 			A string with the visited nodes in order.
+	 */
+	public String traverseGraphDF(T element) {
+		// We set all visited flags to false
+		nodes.forEach(node -> node.setVisited(false));
+		
+		// We get the starting node
+		int startNode = getNode(element);	
+		
+		// We check if it exists
+		if (startNode == INDEX_NOT_FOUND) {
+			return null;
+		}
+		
+		return DFPrint(startNode);
+	}
+
+	private String DFPrint(int startNode) {
+		GraphNode<T> node = nodes.get(startNode);
+		
+		// Set visited flag to true
+		node.setVisited(true);
+		
+		// We create the string builder
+		StringBuilder sb = new StringBuilder();
+		
+		// We append the information of the node
+		sb.append(node.toString());
+		
+		// For each accessible node that has not been visited
+		nodes
+			.parallelStream()
+			.filter(n -> n.isVisited() == false)
+			.collect(Collectors.toList())
+			.forEach(candidate -> sb.append("-" + DFPrint(getNode(candidate.getElement()))));
+		
+		// We return the string
+		return sb.toString();		
+	}
+
+
+	public void floyd(int size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int[][] getP() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public double[][] getA() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
