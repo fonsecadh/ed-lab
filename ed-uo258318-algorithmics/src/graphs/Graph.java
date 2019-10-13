@@ -22,12 +22,12 @@ public class Graph<T> {
 	public static final int INDEX_NOT_FOUND = -1;
 
 	/**
-	 * Infinite cost for traveling from one node to the other.
+	 * Infinite cost.
 	 */
 	public static final double INFINITE = Double.POSITIVE_INFINITY;
 	
 	/**
-	 * For the Floyd's P vector
+	 * For the Floyd's Pathway matrix.
 	 */
 	public static final int EMPTY = -1;
 	
@@ -45,7 +45,7 @@ public class Graph<T> {
 	protected boolean[][] edges;
 	
 	/**
-	 * Double matrix representing the weigths of the graph.
+	 * Double matrix representing the weights of the graph.
 	 */
 	protected double[][] weights;
 	
@@ -54,6 +54,15 @@ public class Graph<T> {
 	 */
 	private int maxSize;
 	
+	/**
+	 * Cost matrix.
+	 */
+	protected double[][] costMatrixA;
+	
+	/**
+	 * Pathway matrix.
+	 */
+	protected int[][] pathwayMatrixP;	
 	
 	
 	// Constructor
@@ -83,6 +92,26 @@ public class Graph<T> {
 
 	public double[][] getWeights() {
 		return weights;
+	}
+
+	/**
+	 * Returns the cost matrix A.
+	 * 
+	 * @return
+	 * 			The cost matrix A.
+	 */
+	public double[][] getA() {
+		return costMatrixA;
+	}
+
+	/**
+	 * Returns the pathway matrix P.
+	 * 
+	 * @return
+	 * 			The pathway matrix P.
+	 */
+	public int[][] getP() {
+		return pathwayMatrixP;
 	}
 
 	
@@ -399,33 +428,119 @@ public class Graph<T> {
 		StringBuilder sb = new StringBuilder();
 		
 		// We append the information of the node
-		sb.append(node.toString());
+		sb.append(node.getElement().toString() + "-");
 		
 		// For each accessible node that has not been visited
 		nodes
 			.parallelStream()
 			.filter(n -> n.isVisited() == false)
+			.filter(fn -> edges[startNode][getNode(fn.getElement())])
 			.collect(Collectors.toList())
-			.forEach(candidate -> sb.append("-" + DFPrint(getNode(candidate.getElement()))));
+			.forEach(candidate -> {
+				if (!candidate.isVisited()) {
+					sb.append(DFPrint(getNode(candidate.getElement())));
+				}
+			});
 		
 		// We return the string
 		return sb.toString();		
 	}
-
-
-	public void floyd(int size) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Reserves memory for A and P.
+	 * 
+	 * Copies weight over A (placing INFINITE whenever the 
+	 * related slot in Edges is false.
+	 * 
+	 * Fills P with EMPTY values.
+	 * 
+	 * Sets the cost of going from one node to itself to 0.
+	 */
+	protected void initsFloyd() {
+		// We reserve memory for A and P
+		this.costMatrixA = new double[maxSize][maxSize];
+		this.pathwayMatrixP = new int[maxSize][maxSize];
 		
+		// We iterate the matrices
+		int currentSize = getSize();
+		
+		for (int i = 0; i < currentSize; i++) {
+			for (int j = 0; j < currentSize; j++) {
+				// We copy the weights over A
+				if (edges[i][j] == false) {
+					costMatrixA[i][j] = INFINITE;
+				} else {
+					costMatrixA[i][j] = weights[i][j];					
+				}
+				
+				// We fill P with EMPTY values
+				pathwayMatrixP[i][j] = EMPTY;
+				
+				// We set the cost of going from one node
+				// to itself to 0
+				costMatrixA[i][i] = 0;
+			}
+		}
 	}
-
-	public int[][] getP() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * Computes the Floyd's cost matrix A up to the An 
+	 * iteration.
+	 * 
+	 * @param an
+	 * 			The An iteration 			
+	 */
+	public void floyd(int an) {
+		initsFloyd(); // We call the Auxiliary method
+		
+		// Floyd's Algorithm
+		for (int k = 0; k < an; k++) {
+			for (int i = 0; i < an; i++) {
+				for (int j = 0; j < an; j++) {
+					// If the cost of going from any node i 
+					// to any other node j through k is lower 
+					// than the cost recorded so far
+					if (costMatrixA[i][k] + costMatrixA[k][j] < costMatrixA[i][j]) {
+						// We update the cost matrix A
+						costMatrixA[i][j] = costMatrixA[i][k] + costMatrixA[k][j];
+						
+						// We update the pathway matrix P
+						pathwayMatrixP[i][j] = k;
+					}
+				}
+			}
+		}
 	}
-
-	public double[][] getA() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * Prints the Floyd's pathway from a departure node 
+	 * to an arrival node.
+	 * 
+	 * @param departure
+	 * 			The departure node.
+	 * @param arrival
+	 * 			The arrival node.
+	 * @return
+	 * 			The Floyd's pathway.
+	 * @throws Exception
+	 * 			If some of the parameters are not valid.
+	 */
+	public String printFloydPath(T departure, T arrival) 
+			throws Exception {
+		int k = pathwayMatrixP[getNode(departure)][getNode(arrival)];
+		
+		if (k < 0) {
+			throw new Exception("Some of the parameters are not valid.");
+		}
+		
+		// We create the resulting string
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(printFloydPath(departure, nodes.get(k).getElement()));
+		sb.append("V" + k);
+		sb.append(printFloydPath(nodes.get(k).getElement(), arrival));	
+		
+		return sb.toString();
 	}
 
 }
