@@ -78,6 +78,13 @@ public class Graph<T> {
 		this.edges = new boolean[n][n];
 		this.weights = new double[n][n];
 		this.nodes = new ArrayList<GraphNode<T>>();
+		
+		
+		// Floyd's Algorithm
+		
+		// We reserve memory for A and P
+		this.costMatrixA = new double[n][n];
+		this.pathwayMatrixP = new int[n][n];
 	}
 
 	
@@ -457,10 +464,6 @@ public class Graph<T> {
 	 * Sets the cost of going from one node to itself to 0.
 	 */
 	protected void initsFloyd() {
-		// We reserve memory for A and P
-		this.costMatrixA = new double[maxSize][maxSize];
-		this.pathwayMatrixP = new int[maxSize][maxSize];
-		
 		// We iterate the matrices
 		int currentSize = getSize();
 		
@@ -492,11 +495,12 @@ public class Graph<T> {
 	 */
 	public void floyd(int an) {
 		initsFloyd(); // We call the Auxiliary method
+		int currentSize = getSize();
 		
 		// Floyd's Algorithm
 		for (int k = 0; k < an; k++) {
-			for (int i = 0; i < an; i++) {
-				for (int j = 0; j < an; j++) {
+			for (int i = 0; i < currentSize; i++) {
+				for (int j = 0; j < currentSize; j++) {
 					// If the cost of going from any node i 
 					// to any other node j through k is lower 
 					// than the cost recorded so far
