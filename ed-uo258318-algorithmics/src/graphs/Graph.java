@@ -64,6 +64,16 @@ public class Graph<T> {
 	 */
 	protected int[][] pathwayMatrixP;	
 	
+	/**
+	 * Dijkstra's D vector.
+	 */
+	private double[] D;
+	
+	/**
+	 * Dijkstra's pathway vector.
+	 */
+	private int[] PD;
+	
 	
 	// Constructor
 	
@@ -85,6 +95,13 @@ public class Graph<T> {
 		// We reserve memory for A and P
 		this.costMatrixA = new double[n][n];
 		this.pathwayMatrixP = new int[n][n];
+		
+		
+		// Dijkstra's Algorithm
+		
+		// We reserve memory for D and PD
+		this.D = new double[n];
+		this.PD = new int[n];
 	}
 
 	
@@ -119,6 +136,30 @@ public class Graph<T> {
 	 */
 	public int[][] getP() {
 		return pathwayMatrixP;
+	}
+	
+	/**
+	 * Returns the Dijkstra's D vector.
+	 * 
+	 * @returns
+	 * 			Dijkstra's D vector.
+	 */
+	public double[][] getD() {
+		double[][] aux = new double[1][D.length];
+		for (int i = 0; i < D.length; i ++) {
+			aux[0][i] = D[i];
+		}
+		return aux;		
+	}
+	
+	/**
+	 * Returns the Dijkstra's pathway vector.
+	 * 
+	 * @return
+	 * 			Dijkstra's pathway vector.
+	 */
+	public int[] getPD() {
+		return PD;
 	}
 
 	
@@ -527,24 +568,72 @@ public class Graph<T> {
 	 * @return
 	 * 			The Floyd's pathway.
 	 * @throws Exception
-	 * 			If some of the parameters are not valid.
+	 * 			If some of the parameters are not valid or do not exist.
 	 */
 	public String printFloydPath(T departure, T arrival) 
 			throws Exception {
-		int k = pathwayMatrixP[getNode(departure)][getNode(arrival)];
+		// We get the index of the nodes
+		int indexDepart = getNode(departure);
+		int indexArrival = getNode(arrival);
+		
+		// We check that the nodes exist
+		if (indexDepart == INDEX_NOT_FOUND || indexArrival == INDEX_NOT_FOUND) {
+			throw new Exception("Some of the parameters do not exist.");
+		}
+		
+		return printFloydPathAux(departure, arrival);
+	}
+
+	private String printFloydPathAux(T departure, T arrival) throws Exception {
+		// We get the index of the nodes
+		int indexDepart = getNode(departure);
+		int indexArrival = getNode(arrival);
+		
+		int k = pathwayMatrixP[indexDepart][indexArrival];
 		
 		if (k < 0) {
-			throw new Exception("Some of the parameters are not valid.");
+			return "";
 		}
 		
 		// We create the resulting string
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(printFloydPath(departure, nodes.get(k).getElement()));
-		sb.append("V" + k);
-		sb.append(printFloydPath(nodes.get(k).getElement(), arrival));	
+		sb.append(printFloydPathAux(departure, nodes.get(k).getElement()));
+		sb.append(nodes.get(k).getElement().toString());
+		sb.append(printFloydPathAux(nodes.get(k).getElement(), arrival));	
 		
 		return sb.toString();
+	}
+	
+	/**
+	 * Verifies that the departure element exists.
+	 * 
+	 * Initializes the D and PD structures.
+	 * 
+	 * Initializes the S set.
+	 * 
+	 * Sets the visible flag of the departure node 
+	 * to true.
+	 * 
+	 * @param departure
+	 * 			The departure node.
+	 */
+	public void initDijkstra(T departure) {
+		// TODO: initDijkstra
+	}
+
+	/**
+	 * Computes Dijkstra's Algorithm.
+	 * 
+	 * @param departure
+	 * 			The departure node.
+	 */
+	public void Dijkstra(T departure) {
+		// TODO: Dijkstra
+	}
+
+	public void print() {
+		// TODO: print		
 	}
 
 }

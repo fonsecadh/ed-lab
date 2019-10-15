@@ -1,449 +1,539 @@
 package graphs;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+public class L5_Floyd_EvalTest
+{
+    private static boolean[][] transformEdges(boolean[][] edges, int size)
+    {
+        boolean[][] result = new boolean[edges.length][];
+        for (int i = 0; i < result.length; i++)
+            result[i] = edges[i].clone();
 
-public class L5_Floyd_EvalTest {
+        for (int i = 0; i < edges.length; i++)
+            for (int j = 0; j < edges[i].length; j++)
+                if ((i >= size) || (j >= size))
+                    result[i][j] = false;
 
-	@Test
-	public void Test_Edit () 
-	{
-		 Graph<Character> g1 = new Graph<Character>(3);
-		    
-		 System.out.println ("TEST EDIT BEGINS ***");
-		 assertEquals(0, g1.getSize());
-		    
-		 try
-		 {
-			 g1.addNode('a');
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("No repeated nodes are allowed" + e);
-		 }
-		    
-		 assertEquals(1, g1.getSize());
-		 assertEquals(0,  g1.getNode('a'));
-		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
-		
-		 // Test nodes for nodes not found
-		 assertEquals(Graph.INDEX_NOT_FOUND,  g1.getNode('b'));
-		 
-		 
-		 // No repeated nodes allowed
-		 try
-		 {
-			 g1.addNode('a');
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("No repeated nodes are allowed" + e);
-		 }
-		 
-		 
-		 try
-		 {
-			 g1.addNode('b');
-			 g1.addNode('c');
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("No repeated nodes are allowed" + e);
-		 }
+        return result;
+    }
 
-		 assertEquals(3, g1.getSize());
-		 assertEquals(0, g1.getNode('a'));
-		 assertEquals(1, g1.getNode('b'));
-		 assertEquals(2, g1.getNode('c'));
-			
-		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
-		 
-		 // Testing edges
-		 try
-		 {
-			 g1.existsEdge('b', 'd');
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Departure or arrival node does not exist" + e);
-		 }
-		 
-		 try
-		 {
-			 assertEquals (false, g1.existsEdge('b', 'c'));
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Departure or arrival node does not exist" + e);
-		 }
-		 
-		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,false}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
-		 
-		 try
-		 {
-			 g1.addEdge ('b', 'c', 5.0);
-			 assertEquals (true, g1.existsEdge('b', 'c'));
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Departure or arrival node does not exist" + e);
-		 }
-		 
-		 assertArrayEquals (new boolean[][]{{false,false,false}, {false,false,true}, {false,false,false}}, g1.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 5.0}, {0.0, 0.0, 0.0}}, g1.getWeights());
-	}
-	
-	@Test
-	public void Test_Floyd_A() {
-		 Graph<String> g = new Graph<String>(6);
-		    
-		 System.out.println ("TEST FLOYD A BEGINS ***");
-		 assertEquals(0, g.getSize());
-		    
-		 try
-		 {
-			 g.addNode("V1");
-			 g.addNode("V2");
-			 g.addNode("V3");
-			 g.addNode("V4");
-			 g.addNode("V5");
-			 g.addNode("V6");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("No repeated nodes are allowed" + e);
-		 }
-		    
-		 assertEquals(6, g.getSize());
-		 assertEquals(0,  g.getNode("V1"));
-		 assertEquals(1,  g.getNode("V2"));
-		 assertEquals(2,  g.getNode("V3"));
-		 assertEquals(3,  g.getNode("V4"));
-		 assertEquals(4,  g.getNode("V5"));
-		 assertEquals(5,  g.getNode("V6"));
-		 assertArrayEquals (new boolean[][]{{false, false, false, false, false, false}, {false, false, false, false, false, false}, {false, false, false, false, false, false}, {false, false, false, false, false, false}, {false, false, false, false, false, false}, {false, false, false, false, false, false}}, g.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}}, g.getWeights());
-	
-		 try
-		 {
-			 g.addEdge ("V1", "V2", 3.0);
-			 g.addEdge ("V1", "V3", 4.0);
-			 g.addEdge ("V1", "V5", 8.0);
-			 
-			 g.addEdge ("V2", "V5", 5.0);
-						 
-			 g.addEdge ("V3", "V5", 3.0);
-			 
-			 g.addEdge ("V5", "V6", 3.0);
-			 g.addEdge ("V5", "V4", 7.0);
-			 
-			 g.addEdge ("V6", "V4", 2.0);
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Starting or arrival node does not exists" + e);
-		 }
-		
-		 assertArrayEquals (new boolean[][]{{false, true, true, false, true, false}, {false, false, false, false, true, false}, {false, false, false, false, true, false}, {false, false, false, false, false, false}, {false, false, false, true, false, true}, {false, false, false, true, false, false}}, g.getEdges());
-		 assertArrayEquals (new double[][]{{0.0, 3.0, 4.0, 0.0, 8.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 5.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 3.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 7.0, 0.0, 3.0}, {0.0, 0.0, 0.0, 2.0, 0.0, 0.0}}, g.getWeights());
-		 assertEquals ("V1-V2-V5-V4-V6-V3-", g.traverseGraphDF("V1"));
-		 //g.print();
-		 
-		 g.floyd(g.getSize());
+    private static double[][] transformWeights(boolean[][] edges, double[][] weights, int size)
+    {
+        double[][] result = new double[weights.length][];
+        for (int i = 0; i < result.length; i++)
+            result[i] = weights[i].clone();
 
-		 assertArrayEquals (new int[][]{
-				 {-1, -1, -1,  5,  2,  4}, 
-				 {-1, -1, -1,  5, -1,  4},
-				 {-1, -1, -1,  5, -1,  4}, 
-				 {-1, -1, -1, -1, -1, -1}, 
-				 {-1, -1, -1,  5, -1, -1}, 
-				 {-1, -1, -1, -1, -1, -1}}, g.getP());
-		 assertArrayEquals (new double[][]{
-				 {00.0, 03.0, 04.0, 12.0, 07.0, 10.0}, 
-				 {Graph.INFINITE, 00.0, 			Graph.INFINITE, 10.0, 05.0, 			08.0}, 
-				 {Graph.INFINITE, Graph.INFINITE, 	00.0, 			08.0, 03.0, 			06.0}, 
-				 {Graph.INFINITE, Graph.INFINITE, 	Graph.INFINITE, 00.0, Graph.INFINITE, 	Graph.INFINITE}, 
-				 {Graph.INFINITE, Graph.INFINITE, 	Graph.INFINITE, 05.0, 00.0, 			03.0}, 
-				 {Graph.INFINITE, Graph.INFINITE, 	Graph.INFINITE, 02.0, Graph.INFINITE, 	00.0}}, g.getA());
-				 
-		 
-		 try
-		 {
-			 assertEquals ("V1V3V5V6", "V1" + g.printFloydPath ("V1", "V6") + "V6");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Starting or arrival node does not exists" + e);
-		 } 
-	}
-	
-	
-	@Test
-	public void Test_Floyd_B () 
-	{
-		 Graph<String> g = new Graph<String>(6);
-		    
-		 System.out.println ("TEST FLOYD B BEGINS ***");
-		 assertEquals(0, g.getSize());
-		    
-		 try
-		 {
-			 g.addNode("Spain");
-			 g.addNode("Venezuela");
-			 g.addNode("UK");
-			 g.addNode("Poland");
-			 g.addNode("Greece");
-			 g.addNode("Japan");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("No repeated nodes are allowed" + e);
-		 }
-		    
-		 assertEquals(6, g.getSize());
-		 assertEquals(0, g.getNode("Spain"));
-		 assertEquals(1, g.getNode("Venezuela"));
-		 assertEquals(2, g.getNode("UK"));
-		 assertEquals(3, g.getNode("Poland"));
-		 assertEquals(4, g.getNode("Greece"));
-		 assertEquals(5, g.getNode("Japan"));
-		 
-		 assertArrayEquals (new boolean[][]{
-			 {false, false, false, false, false, false}, 
-			 {false, false, false, false, false, false},
-			 {false, false, false, false, false, false},
-			 {false, false, false, false, false, false},
-			 {false, false, false, false, false, false},
-			 {false, false, false, false, false, false }}, g.getEdges());
-		 
-		 assertArrayEquals (new double[][]{
-			 {00.0, 00.0, 00.0, 00.0, 00.0, 00.0}, 
-			 {00.0, 00.0, 00.0, 00.0, 00.0, 00.0},  
-			 {00.0, 00.0, 00.0, 00.0, 00.0, 00.0}, 
-			 {00.0, 00.0, 00.0, 00.0, 00.0, 00.0}, 
-			 {00.0, 00.0, 00.0, 00.0, 00.0, 00.0},
-			 {00.0, 00.0, 00.0, 00.0, 00.0, 00.0}}, g.getWeights());
-		 
-		
-		 // Test nodes for nodes not found
-		 assertEquals(Graph.INDEX_NOT_FOUND,  g.getNode("Ecuador"));
-		 
-		 
-		 // No repeated nodes allowed
-		 try
-		 {
-			 g.addNode("Venezuela");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("No repeated nodes are allowed" + e);
-		 }
-		 
-		 		
-		 // Testing edges
-		 try
-		 {
-			 g.existsEdge("Venezuela", "Ecuador");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Departure or arrival node does not exist" + e);
-		 }
-		 
-		 try
-		 {
-			 assertEquals (false, g.existsEdge("Greece", "Spain"));
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Departure or arrival node does not exist" + e);
-		 }
-		
-		 try
-		 {
-			 g.addEdge ("Spain",     "Venezuela", 3.0);
-			 g.addEdge ("Spain",     "Greece"   , 2.0);
-			 g.addEdge ("Venezuela", "Poland"   , 2.0);
-			 g.addEdge ("Greece",    "UK"       , 1.0);
-			 g.addEdge ("UK",        "Poland"   , 4.0);
-			 g.addEdge ("Poland",    "Spain"    , 1.0);
-			 g.addEdge ("Poland",    "Greece"   , 3.0);
-			 g.addEdge ("Poland",    "Japan"    , 1.0);
-			 g.addEdge ("Japan",     "Spain"    , 1.0);
-			 g.addEdge ("Japan",     "Poland"   , 2.0);
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Departure or arrival node does not exist" + e);
-		 }
-		 
-		 assertArrayEquals (new boolean[][]{
-			 {false, true,  false, false, true,  false}, 
-			 {false, false, false, true,  false, false},
-			 {false, false, false, true,  false, false},
-			 {true,  false, false, false, true,  true},
-			 {false, false, true,  false, false,  false},
-			 {true , false, false, true,  false, false}}, g.getEdges());
-		 
-		 assertArrayEquals (new double[][]{
-			 {00.0, 03.0, 00.0, 00.0, 02.0, 00.0}, 
-			 {00.0, 00.0, 00.0, 02.0, 00.0, 00.0},  
-			 {00.0, 00.0, 00.0, 04.0, 00.0, 00.0}, 
-			 {01.0, 00.0, 00.0, 00.0, 03.0, 01.0}, 
-			 {00.0, 00.0, 01.0, 00.0, 00.0, 00.0},
-			 {01.0, 00.0, 00.0, 02.0, 00.0, 00.0}}, g.getWeights());
- 
-		 
-		 g.floyd(g.getSize());
-		 		 
-		 assertArrayEquals (new double[][]{
-			 {00.0, 03.0, 03.0, 05.0, 02.0, 06.0}, 
-			 {03.0, 00.0, 06.0, 02.0, 05.0, 03.0},  
-			 {05.0, 08.0, 00.0, 04.0, 07.0, 05.0}, 
-			 {01.0, 04.0, 04.0, 00.0, 03.0, 01.0}, 
-			 {06.0, 09.0, 01.0, 05.0, 00.0, 06.0},
-			 {01.0, 04.0, 04.0, 02.0, 03.0, 00.0}}, g.getA());
-		 
-		 assertArrayEquals (new int[][]{
-			 {-1, -1,  4,  1, -1,  3}, 
-			 { 3, -1,  4, -1,  3,  3},
-			 { 3,  3, -1, -1,  3,  3}, 
-			 {-1,  0,  4, -1, -1, -1}, 
-			 { 3,  3, -1,  2, -1,  3}, 
-			 {-1,  0,  4, -1,  0, -1}}, g.getP());
-		 
-		
-		 try
-		 {
-			 assertEquals ("SpainVenezuelaPolandJapan", "Spain" + g.printFloydPath ("Spain", "Japan") + "Japan");
-			 assertEquals ("SpainGreeceUK", "Spain" + g.printFloydPath ("Spain", "UK") + "UK");
-			 assertEquals ("SpainVenezuelaPoland", "Spain" + g.printFloydPath ("Spain", "Poland") + "Poland");
-			 assertEquals ("PolandSpainVenezuela", "Poland" + g.printFloydPath ("Poland", "Venezuela") + "Venezuela");
+        for (int i = 0; i < weights.length; i++)
+            for (int j = 0; j < weights[i].length; j++)
+                if ((i >= size) || (j >= size) || !edges[i][j])
+                    result[i][j] = 0.0;
 
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Starting or arrival node does not exists" + e);
-		 } 
-		 
-		 try
-		 {
-			 g.removeNode("Greece");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Node does not exists" + e);
-		 } 
-		 
-		 
-		 assertArrayEquals (new boolean[][]{
-			 {false, true,  false, false, false,  false}, 
-			 {false, false, false, true,  false, false},
-			 {false, false, false, true,  false, false},
-			 {true,  false, false, false, true,  true},
-			 {true , false, false, true,  false, false},
-			 {true , false, false, true,  false, false}}, g.getEdges());
-		 
-		 assertArrayEquals (new double[][]{
-			 {00.0, 03.0, 00.0, 00.0, 00.0, 00.0}, 
-			 {00.0, 00.0, 00.0, 02.0, 00.0, 00.0},  
-			 {00.0, 00.0, 00.0, 04.0, 00.0, 00.0}, 
-			 {01.0, 00.0, 00.0, 00.0, 01.0, 01.0}, 
-			 {01.0, 00.0, 00.0, 02.0, 00.0, 00.0},
-			 {01.0, 00.0, 00.0, 02.0, 00.0, 00.0}}, g.getWeights());
-		 		 
-		 g.floyd(g.getSize());
+        return result;
+    }
 
-		 
-		 assertArrayEquals (new double[][]{
-			 {00.0, 03.0, Graph.INFINITE, 	05.0, 06.0, 06.0}, 
-			 {03.0, 00.0, Graph.INFINITE, 	02.0, 03.0, 03.0},  
-			 {05.0, 08.0, 00.0, 			04.0, 05.0, 05.0}, 
-			 {01.0, 04.0, Graph.INFINITE, 	00.0, 01.0, 01.0}, 
-			 {01.0, 04.0, Graph.INFINITE, 	02.0, 00.0, 06.0},
-			 {01.0, 04.0, 04.0, 			02.0, 03.0, 00.0}}, g.getA());
-		 
-		 assertArrayEquals (new int[][]{
-			 {-1, -1, -1,  1,  3,  3}, 
-			 { 3, -1, -1, -1,  3,  3},
-			 { 3,  3, -1, -1,  3,  3}, 
-			 {-1,  0, -1, -1, -1, -1}, 
-			 {-1,  0, -1, -1, -1,  3}, 
-			 {-1,  0,  4, -1,  0, -1}}, g.getP());
-		 
-		 try
-		 {
-			 assertEquals ("SpainVenezuelaPolandJapan", "Spain" + g.printFloydPath ("Spain", "Japan") + "Japan");
-			 assertEquals ("SpainUK", "Spain" + g.printFloydPath ("Spain", "UK") + "UK");
-			 assertEquals ("SpainVenezuelaPoland", "Spain" + g.printFloydPath ("Spain", "Poland") + "Poland");
-			 assertEquals ("PolandSpainVenezuela", "Poland" + g.printFloydPath ("Poland", "Venezuela") + "Venezuela");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Starting or arrival node does not exists" + e);
-		 } 
-		 
-		 
-		 
-		 try
-		 {
-			 g.removeEdge("Poland", "Japan");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Starting or arrival node does not exists" + e);
-		 } 
-		 
-		 
-		 assertArrayEquals (new boolean[][]{
-			 {false, true,  false, false, false,  false}, 
-			 {false, false, false, true,  false, false},
-			 {false, false, false, true,  false, false},
-			 {true,  false, false, false, false,  true},
-			 {true , false, false, true,  false, false},
-			 {true , false, false, true,  false, false}}, g.getEdges());
-		 
-		 assertArrayEquals (new double[][]{
-			 {00.0, 03.0, 00.0, 00.0, 00.0, 00.0}, 
-			 {00.0, 00.0, 00.0, 02.0, 00.0, 00.0},  
-			 {00.0, 00.0, 00.0, 04.0, 00.0, 00.0}, 
-			 {01.0, 00.0, 00.0, 00.0, 00.0, 01.0}, 
-			 {01.0, 00.0, 00.0, 02.0, 00.0, 00.0},
-			 {01.0, 00.0, 00.0, 02.0, 00.0, 00.0}}, g.getWeights());
-		 		 
-		 g.floyd(g.getSize());
-	
-		 assertArrayEquals (new double[][]{
-			 {00.0, 03.0, Graph.INFINITE, 	05.0, Graph.INFINITE, 	06.0}, 
-			 {03.0, 00.0, Graph.INFINITE, 	02.0, Graph.INFINITE, 	03.0},  
-			 {05.0, 08.0, 00.0, 			04.0, Graph.INFINITE, 	05.0}, 
-			 {01.0, 04.0, Graph.INFINITE, 	00.0, Graph.INFINITE, 	01.0}, 
-			 {01.0, 04.0, Graph.INFINITE,	02.0, 00.0, 			06.0},
-			 {01.0, 04.0, 04.0, 			02.0, 03.0, 			00.0}}, g.getA());
-		 
-		 assertArrayEquals (new int[][]{
-			 {-1, -1, -1,  1, -1,  3}, 
-			 { 3, -1, -1, -1, -1,  3},
-			 { 3,  3, -1, -1, -1,  3}, 
-			 {-1,  0, -1, -1, -1, -1}, 
-			 {-1,  0, -1, -1, -1,  3}, 
-			 {-1,  0,  4, -1,  0, -1}}, g.getP());
-		 
-		 try
-		 {
-			 assertEquals ("SpainJapan", "Spain" + g.printFloydPath ("Spain", "Japan") + "Japan");
-			 assertEquals ("SpainUK", "Spain" + g.printFloydPath ("Spain", "UK") + "UK");
-			 assertEquals ("SpainVenezuelaPoland", "Spain" + g.printFloydPath ("Spain", "Poland") + "Poland");
-			 assertEquals ("PolandSpainVenezuela", "Poland" + g.printFloydPath ("Poland", "Venezuela") + "Venezuela");
-		 }
-		 catch (Exception e)
-		 {
-			 System.out.println ("Starting or arrival node does not exists" + e);
-		 } 
-	}	
+    private static int[][] transformMatrix(int[][] matrix, int size)
+    {
+        int[][] result = new int[matrix.length][];
+        for (int i = 0; i < result.length; i++)
+            result[i] = matrix[i].clone();
+
+        for (int i = 0; i < matrix.length; i++)
+            for (int j = 0; j < matrix[i].length; j++)
+                if ((i >= size) || (j >= size))
+                    result[i][j] = Graph.EMPTY;
+
+        return result;
+    }
+
+    private static double[][] transformMatrix(double[][] matrix, int size)
+    {
+        double[][] result = new double[matrix.length][];
+        for (int i = 0; i < result.length; i++)
+            result[i] = matrix[i].clone();
+
+        for (int i = 0; i < matrix.length; i++)
+            for (int j = 0; j < matrix[i].length; j++)
+                if ((i >= size) || (j >= size))
+                    result[i][j] = Graph.INFINITE;
+
+        return result;
+    }
+
+    @Test
+    public void edit()
+    {
+        Graph<Character> g = new Graph<Character>(6);
+
+        assertEquals(0, g.getSize());
+
+        // Basic node addition
+        try
+        {
+            g.addNode('a');
+            g.addNode('b');
+            g.addNode('c');
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addNode'");
+        }
+
+        assertEquals(3, g.getSize());
+        assertEquals(0, g.getNode('a'));
+        assertEquals(1, g.getNode('b'));
+        assertEquals(2, g.getNode('c'));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        // Inexistent nodes
+        assertEquals(-1, g.getNode('e'));
+
+        // No repeated nodes allowed
+        try
+        {
+            g.addNode('a');
+            fail("FAIL: unexpected behavior of 'addNode'");
+        }
+        catch (Exception e) { }
+
+        try
+        {
+            g.addNode('d');
+            g.addNode('e');
+            g.addNode('f');
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addNode'");
+        }
+
+        assertEquals(6, g.getSize());
+        assertEquals(0, g.getNode('a'));
+        assertEquals(1, g.getNode('b'));
+        assertEquals(2, g.getNode('c'));
+        assertEquals(3, g.getNode('d'));
+        assertEquals(4, g.getNode('e'));
+        assertEquals(5, g.getNode('f'));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        // Testing edges
+        try
+        {
+            assertEquals(false, g.existsEdge('b', 'g'));
+            fail("FAIL: unexpected behavior of 'existsEdge'");
+        }
+        catch (Exception e) { }
+
+        try
+        {
+            assertEquals(false, g.existsEdge('b', 'c'));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'existsEdge'");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        try
+        {
+            g.addEdge('a', 'b', 3.0);
+            g.addEdge('a', 'd', 2.0);
+            g.addEdge('b', 'a', 5.0);
+            g.addEdge('b', 'c', 6.0);
+            g.addEdge('e', 'd', 1.0);
+            g.addEdge('e', 'f', 7.0);
+            assertEquals(true, g.existsEdge('b', 'a'));
+            assertEquals(true, g.existsEdge('e', 'd'));
+            assertEquals(false, g.existsEdge('d', 'e'));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, true, false, true, false, false }, { true, false, true, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, true, false, true }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 0.0, 2.0, 0.0, 0.0 }, { 5.0, 0.0, 6.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 1.0, 0.0, 7.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        // Adding a node when the graph is full
+        try
+        {
+            g.addNode('z');
+            fail("FAIL: unexpected behavior of 'addNode'");
+        }
+        catch (Exception e) { }
+
+        assertArrayEquals(new boolean[][] { { false, true, false, true, false, false }, { true, false, true, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, true, false, true }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 0.0, 2.0, 0.0, 0.0 }, { 5.0, 0.0, 6.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 1.0, 0.0, 7.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        // Removal of nodes
+        try
+        {
+            g.removeNode('a');
+            g.removeNode('c');
+            g.removeNode('d');
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'removeNode'");
+        }
+
+        assertEquals(3, g.getSize());
+        assertEquals(1, g.getNode('b'));
+        assertEquals(2, g.getNode('e'));
+        assertEquals(0, g.getNode('f'));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { true, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 7.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        // Adding nodes back.
+        try
+        {
+            g.addNode('c');
+            g.addNode('d');
+            g.addNode('a');
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addNode'");
+        }
+
+        assertEquals(6, g.getSize());
+        assertEquals(5, g.getNode('a'));
+        assertEquals(1, g.getNode('b'));
+        assertEquals(3, g.getNode('c'));
+        assertEquals(4, g.getNode('d'));
+        assertEquals(2, g.getNode('e'));
+        assertEquals(0, g.getNode('f'));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { true, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 7.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+    }
+
+    @Test
+    public void dfs()
+    {
+        Graph<String> g = new Graph<String>(6);
+
+        try
+        {
+            g.addNode("V1");
+            g.addNode("V2");
+            g.addNode("V3");
+            g.addNode("V4");
+            g.addNode("V5");
+            g.addNode("V6");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addNode'");
+        }
+
+        assertEquals(6, g.getSize());
+        assertEquals(0, g.getNode("V1"));
+        assertEquals(1, g.getNode("V2"));
+        assertEquals(2, g.getNode("V3"));
+        assertEquals(3, g.getNode("V4"));
+        assertEquals(4, g.getNode("V5"));
+        assertEquals(5, g.getNode("V6"));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        try
+        {
+            g.addEdge("V1", "V2", 3.0);
+            g.addEdge("V1", "V3", 4.0);
+            g.addEdge("V1", "V5", 8.0);
+            g.addEdge("V2", "V5", 5.0);
+            g.addEdge("V3", "V5", 3.0);
+            g.addEdge("V5", "V6", 3.0);
+            g.addEdge("V5", "V4", 7.0);
+            g.addEdge("V6", "V4", 2.0);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addEdge'");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, true, true, false, true, false }, { false, false, false, false, true, false }, { false, false, false, false, true, false }, { false, false, false, false, false, false }, { false, false, false, true, false, true }, { false, false, false, true, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 4.0, 0.0, 8.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 5.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 3.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 7.0, 0.0, 3.0 }, { 0.0, 0.0, 0.0, 2.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        try
+        {
+            assertEquals("V1-V2-V5-V4-V6-V3-", g.traverseGraphDF("V1"));
+            assertEquals("V2-V5-V4-V6-", g.traverseGraphDF("V2"));
+            assertEquals("V3-V5-V4-V6-", g.traverseGraphDF("V3"));
+            assertEquals("V4-", g.traverseGraphDF("V4"));
+            assertEquals("V5-V4-V6-", g.traverseGraphDF("V5"));
+            assertEquals("V6-V4-", g.traverseGraphDF("V6"));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'traverseGraphDF'");
+        }
+    }
+
+    @Test
+    public void floydA()
+    {
+        Graph<String> g = new Graph<String>(6);
+
+        try
+        {
+            g.addNode("V1");
+            g.addNode("V2");
+            g.addNode("V3");
+            g.addNode("V4");
+            g.addNode("V5");
+            g.addNode("V6");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addNode'");
+        }
+
+        assertEquals(6, g.getSize());
+        assertEquals(0, g.getNode("V1"));
+        assertEquals(1, g.getNode("V2"));
+        assertEquals(2, g.getNode("V3"));
+        assertEquals(3, g.getNode("V4"));
+        assertEquals(4, g.getNode("V5"));
+        assertEquals(5, g.getNode("V6"));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        try
+        {
+            g.addEdge("V1", "V2", 3.0);
+            g.addEdge("V1", "V3", 4.0);
+            g.addEdge("V1", "V5", 8.0);
+            g.addEdge("V2", "V5", 5.0);
+            g.addEdge("V3", "V5", 3.0);
+            g.addEdge("V5", "V6", 3.0);
+            g.addEdge("V5", "V4", 7.0);
+            g.addEdge("V6", "V4", 2.0);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addEdge'");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, true, true, false, true, false }, { false, false, false, false, true, false }, { false, false, false, false, true, false }, { false, false, false, false, false, false }, { false, false, false, true, false, true }, { false, false, false, true, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 4.0, 0.0, 8.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 5.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 3.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 7.0, 0.0, 3.0 }, { 0.0, 0.0, 0.0, 2.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        g.floyd(g.getSize());
+
+        assertArrayEquals(new int[][] { { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 5, 2, 4 }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 5, Graph.EMPTY, 4 }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 5, Graph.EMPTY, 4 }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 5, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY } }, transformMatrix(g.getP(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 4.0, 12.0, 7.0, 10.0 }, { Graph.INFINITE, 0.0, Graph.INFINITE, 10.0, 5.0, 8.0 }, { Graph.INFINITE, Graph.INFINITE, 0.0, 8.0, 3.0, 6.0 }, { Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, 00.0, Graph.INFINITE, Graph.INFINITE }, { Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, 5.0, 0.0, 3.0 }, { Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, 2.0, Graph.INFINITE, 0.0 } }, transformMatrix(g.getA(), g.getSize()));
+
+        try
+        {
+            assertEquals("V1V3V5V6", "V1" + g.printFloydPath("V1", "V6") + "V6");
+            assertEquals("V2V5V6V4", "V2" + g.printFloydPath("V2", "V4") + "V4");
+            assertEquals("V5V6", "V5" + g.printFloydPath("V5", "V6") + "V6");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'printFloydPath'");
+        }
+
+        // Inexistent nodes.
+        try
+        {
+            g.printFloydPath("V1", "V7");
+            fail("FAIL: unexpected behavior of 'printFloydPath'");
+        }
+        catch (Exception e) { }
+
+        try
+        {
+            g.printFloydPath("V7", "V3");
+            fail("FAIL: unexpected behavior of 'printFloydPath'");
+        }
+        catch (Exception e) { }
+    }
+
+    @Test
+    public void floydB()
+    {
+        Graph<String> g = new Graph<String>(6);
+
+        try
+        {
+            g.addNode("Spain");
+            g.addNode("Venezuela");
+            g.addNode("UK");
+            g.addNode("Poland");
+            g.addNode("Greece");
+            g.addNode("Japan");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addNode'");
+        }
+
+        assertEquals(6, g.getSize());
+        assertEquals(0, g.getNode("Spain"));
+        assertEquals(1, g.getNode("Venezuela"));
+        assertEquals(2, g.getNode("UK"));
+        assertEquals(3, g.getNode("Poland"));
+        assertEquals(4, g.getNode("Greece"));
+        assertEquals(5, g.getNode("Japan"));
+
+        assertArrayEquals(new boolean[][] { { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        // Check inexistent nodes
+        assertEquals(Graph.INDEX_NOT_FOUND, g.getNode("Ecuador"));
+
+        // No repeated nodes allowed
+        try
+        {
+            g.addNode("Venezuela");
+            fail("FAIL: unexpected behavior of 'addNode'");
+        }
+        catch (Exception e) { }
+
+        // Testing edges
+        try
+        {
+            g.existsEdge("Venezuela", "Ecuador");
+            fail("FAIL: unexpected behavior of 'existsEdge'");
+        }
+        catch (Exception e) { }
+
+        try
+        {
+            assertEquals(false, g.existsEdge("Greece", "Spain"));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'existsEdge'");
+        }
+
+        try
+        {
+            g.addEdge("Spain", "Venezuela", 3.0);
+            g.addEdge("Spain", "Greece", 2.0);
+            g.addEdge("Venezuela", "Poland", 2.0);
+            g.addEdge("Greece", "UK", 1.0);
+            g.addEdge("UK", "Poland", 4.0);
+            g.addEdge("Poland", "Spain", 1.0);
+            g.addEdge("Poland", "Greece", 3.0);
+            g.addEdge("Poland", "Japan", 1.0);
+            g.addEdge("Japan", "Spain", 1.0);
+            g.addEdge("Japan", "Poland", 2.0);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'addEdge'");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, true, false, false, true, false }, { false, false, false, true, false, false }, { false, false, false, true, false, false }, { true, false, false, false, true, true }, { false, false, true, false, false, false }, { true, false, false, true, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 0.0, 0.0, 2.0, 0.0 }, { 0.0, 0.0, 0.0, 2.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 4.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0, 0.0, 3.0, 1.0 }, { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0, 2.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        g.floyd(g.getSize());
+
+        assertArrayEquals(new double[][]{ { 0.0, 3.0, 3.0, 5.0, 2.0, 6.0 }, { 3.0, 0.0, 6.0, 2.0, 5.0, 3.0 }, { 5.0, 8.0, 0.0, 4.0, 7.0, 5.0 }, { 1.0, 4.0, 4.0, 0.0, 3.0, 1.0 }, { 6.0, 9.0, 1.0, 5.0, 0.0, 6.0 }, { 1.0, 4.0, 4.0, 2.0, 3.0, 0.0 } }, transformMatrix(g.getA(), g.getSize()));
+        assertArrayEquals(new int[][] { { Graph.EMPTY, Graph.EMPTY, 4, 1, Graph.EMPTY, 3 }, { 3, Graph.EMPTY, 4, Graph.EMPTY, 3, 3 }, { 3, 3, Graph.EMPTY, Graph.EMPTY, 3, 3 }, { Graph.EMPTY, 0, 4, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { 3, 3, Graph.EMPTY, 2, Graph.EMPTY, 3 }, { Graph.EMPTY, 0, 4, Graph.EMPTY, 0, Graph.EMPTY } }, transformMatrix(g.getP(), g.getSize()));
+
+        try
+        {
+            assertEquals("SpainVenezuelaPolandJapan", "Spain" + g.printFloydPath("Spain", "Japan") + "Japan");
+            assertEquals("SpainGreeceUK", "Spain" + g.printFloydPath("Spain", "UK") + "UK");
+            assertEquals("SpainVenezuelaPoland", "Spain" + g.printFloydPath("Spain", "Poland") + "Poland");
+            assertEquals("PolandSpainVenezuela", "Poland" + g.printFloydPath("Poland", "Venezuela") + "Venezuela");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'printFloydPath'");
+        }
+
+        try
+        {
+            g.removeNode("Greece");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'removeNode'");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, true, false, false, false, false }, { false, false, false, true, false, false }, { false, false, false, true, false, false }, { true, false, false, false, true, false }, { true, false, false, true, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 2.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 4.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0, 2.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        g.floyd(g.getSize());
+
+        assertArrayEquals(new double[][] { { 0.0, 3.0, Graph.INFINITE, 5.0, 6.0, Graph.INFINITE }, { 3.0, 0.0, Graph.INFINITE, 2.0, 3.0, Graph.INFINITE }, { 5.0, 8.0, 0.0, 4.0, 5.0, Graph.INFINITE }, { 1.0, 4.0, Graph.INFINITE, 0.0, 1.0, Graph.INFINITE }, { 1.0, 4.0, Graph.INFINITE, 2.0, 0.0, Graph.INFINITE }, { Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, Graph.INFINITE } }, transformMatrix(g.getA(), g.getSize()));
+        assertArrayEquals(new int[][] { { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 1, 3, Graph.EMPTY }, { 3, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 3, Graph.EMPTY }, { 3, 3, Graph.EMPTY, Graph.EMPTY, 3, Graph.EMPTY }, { Graph.EMPTY, 0, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, 0, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY } }, transformMatrix(g.getP(), g.getSize()));
+
+        try
+        {
+            assertEquals("SpainVenezuelaPolandJapan", "Spain" + g.printFloydPath("Spain", "Japan") + "Japan");
+            assertEquals("SpainUK", "Spain" + g.printFloydPath("Spain", "UK") + "UK");
+            assertEquals("SpainVenezuelaPoland", "Spain" + g.printFloydPath("Spain", "Poland") + "Poland");
+            assertEquals("PolandSpainVenezuela", "Poland" + g.printFloydPath("Poland", "Venezuela") + "Venezuela");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'printFloydPath'");
+        }
+
+        try
+        {
+            g.removeEdge("Poland", "Japan");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'removeEdge'");
+        }
+
+        assertArrayEquals(new boolean[][] { { false, true, false, false, false, false }, { false, false, false, true, false, false }, { false, false, false, true, false, false }, { true, false, false, false, false, false }, { true, false, false, true, false, false }, { false, false, false, false, false, false } }, transformEdges(g.getEdges(), g.getSize()));
+        assertArrayEquals(new double[][] { { 0.0, 3.0, 0.0, 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 2.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 4.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0, 2.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } }, transformWeights(g.getEdges(), g.getWeights(), g.getSize()));
+
+        g.floyd(g.getSize());
+
+        assertArrayEquals(new double[][] { { 0.0, 3.0, Graph.INFINITE, 5.0, Graph.INFINITE, Graph.INFINITE }, { 3.0, 0.0, Graph.INFINITE, 2.0, Graph.INFINITE, Graph.INFINITE }, { 5.0, 8.0, 0.0, 4.0, Graph.INFINITE, Graph.INFINITE }, { 1.0, 4.0, Graph.INFINITE, 0.0, Graph.INFINITE, Graph.INFINITE }, { 1.0, 4.0, Graph.INFINITE, 2.0, 0.0, Graph.INFINITE }, { Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, Graph.INFINITE, Graph.INFINITE } }, transformMatrix(g.getA(), g.getSize()));
+        assertArrayEquals(new int[][] { { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, 1, Graph.EMPTY, Graph.EMPTY }, { 3, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { 3, 3, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, 0, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, 0, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY }, { Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY, Graph.EMPTY } }, transformMatrix(g.getP(), g.getSize()));
+
+        try
+        {
+            assertEquals("SpainJapan", "Spain" + g.printFloydPath("Spain", "Japan") + "Japan");
+            assertEquals("SpainUK", "Spain" + g.printFloydPath("Spain", "UK") + "UK");
+            assertEquals("SpainVenezuelaPoland", "Spain" + g.printFloydPath("Spain", "Poland") + "Poland");
+            assertEquals("PolandSpainVenezuela", "Poland" + g.printFloydPath("Poland", "Venezuela") + "Venezuela");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("FAIL: unexpected exception raised in 'printFloydPath'");
+        }
+    }
 }
