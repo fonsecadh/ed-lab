@@ -101,7 +101,7 @@ public class Graph<T> {
 		
 		// We reserve memory for D and PD
 		this.D = new double[n];
-		this.PD = new int[n];
+		this.PD = new int[n];		
 	}
 
 	
@@ -177,8 +177,57 @@ public class Graph<T> {
 	}
 	
 	
+	// Print
+
+	/**
+	 * Prints the nodes of the graph, as well as the 
+	 * edges and weights matrices.
+	 */
+	public void print() {		
+		System.out.println(toString());
+	}
+	
+	
 	// Methods
 	
+	@Override
+	/**
+	 * Returns a string with the nodes of the graph, as well 
+	 * as the edges and weights matrices.
+	 */
+	public String toString() {
+		StringBuilder info = new StringBuilder();
+		int currentSize = getSize();
+		
+		// Nodes of the graph
+		info.append("----------------Nodes----------------");
+		nodes.forEach(n -> info.append("\n" + n.toString()));
+		info.append("\n\n");
+		
+		// Edges of the graph
+		info.append("----------------Edges----------------\n");
+		for (int i = 0; i < currentSize; i++) {
+			for (int j = 0; j < currentSize; j++) {
+				info.append(edges[i][j] + " ");
+			}
+			info.append("\n");
+		}
+		info.append("\n");
+		
+		// Weights of the graph
+		info.append("----------------Weights----------------\n");
+		for (int i = 0; i < currentSize; i++) {
+			for (int j = 0; j < currentSize; j++) {
+				info.append(weights[i][j] + " ");
+			}
+			info.append("\n");
+		}
+		info.append("\n");
+		
+		return info.toString();
+	}
+
+
 	/**
 	 * Returns the position in the graph for a 
 	 * given node element.
@@ -617,9 +666,40 @@ public class Graph<T> {
 	 * 
 	 * @param departure
 	 * 			The departure node.
+	 * @throws Exception 
+	 * 			If the departure node does not exist.
 	 */
-	public void initDijkstra(T departure) {
-		// TODO: initDijkstra
+	public void initDijkstra(T departure) throws Exception {
+		int indexDep = getNode(departure);
+		
+		// Input validation
+		if (indexDep == INDEX_NOT_FOUND) {
+			throw new Exception("Departure node does not exist");
+		}
+		
+		int currentSize = getSize();
+		
+		// We initialize the D and PD structures
+		for (int i = 0; i < currentSize; i++) {
+			// PD
+			if (edges[indexDep][i] == true) {
+				PD[i] = indexDep;
+			} else {
+				PD[i] = EMPTY;
+			}			
+			
+			// D
+			if (weights[indexDep][i] == 0.0 || edges[indexDep][i] == false) {
+				D[i] = INFINITE;
+			} else {
+				D[i] = weights[indexDep][i];
+			}
+			
+		}
+		
+		// We initialize the S set		
+		nodes.forEach(n -> n.setVisible(false));
+		nodes.get(indexDep).setVisible(true);
 	}
 
 	/**
@@ -628,12 +708,102 @@ public class Graph<T> {
 	 * @param departure
 	 * 			The departure node.
 	 */
-	public void Dijkstra(T departure) {
-		// TODO: Dijkstra
+	public void Dijkstra(T departure) {		
+		try {			
+			// Dijkstra's initialization
+			initDijkstra(departure); 
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		} 		
+		
+		int currentSize = getSize();
+		
+		// N-1 iterations
+		for (int p = 1; p < currentSize; p++) {	
+			// We select the pivot
+			GraphNode<T> pivotW = pivotSelectionLinear();
+			
+			// We check that a pivot was selected
+			if (pivotW != null) {
+				// We get the selected pivot w
+				GraphNode<T> selectedW = pivotW;
+				
+				// We add the pivot to the S set
+				nodes.get(getNode(selectedW.getElement())).setVisible(true);
+				
+				// For each node m in V-S update costs 
+				nodes
+					.stream()
+					.filter(n -> !n.isVisible())
+					.collect(Collectors.toList())
+					.forEach(m -> {
+						int wIndex = getNode(selectedW.getElement());
+						int mIndex = getNode(m.getElement());
+						if (D[wIndex] + weights[wIndex][mIndex] < D[mIndex]
+								&& edges[wIndex][mIndex] == true) {
+							// We update the costs
+							D[mIndex] = D[wIndex] + weights[wIndex][mIndex];
+							PD[mIndex] = wIndex;
+						}
+					});		
+			}				
+		}
 	}
 
-	public void print() {
-		// TODO: print		
+	@SuppressWarnings("unused")
+	private GraphNode<T> pivotSelectionQuadratic() {
+		// S set
+		List<GraphNode<T>> s = nodes
+			.stream()
+			.filter(n -> n.isVisible())
+			.collect(Collectors.toList());
+		
+		// V-S set
+		List<GraphNode<T>> vMinusS = nodes
+			.stream()
+			.filter(n -> !n.isVisible())
+			.collect(Collectors.toList());
+		
+		// Evaluate cost of every edge {k, w} where k is member 
+		// of the S set and w is member of V-S.				
+		double minCost = INFINITE;
+		GraphNode<T> pivotW = null;
+		
+		for (int i = 0; i < s.size(); i++) {
+			GraphNode<T> k = s.get(i);
+			for (int j = 0; j < vMinusS.size(); j++) {
+				GraphNode<T> w = vMinusS.get(j);
+				
+				int kIndex = getNode(k.getElement());
+				int wIndex = getNode(w.getElement());
+				
+				if (edges[kIndex][wIndex] == true) {
+					if (weights[kIndex][wIndex] < minCost) {
+						// Select the edge of minimum cost, adding w to the S set.
+						// w is the node with the lowest cost in D.		
+						minCost = weights[kIndex][wIndex];
+						pivotW = w;
+					}
+				}
+			}
+		}
+		return pivotW;
+	}
+	
+	private GraphNode<T> pivotSelectionLinear() {
+		double minCost = INFINITE;
+		GraphNode<T> pivotW = null;
+		
+		// We iterate the D vector and get the 
+		// pivot w with minimum cost.
+		for (int i = 0; i < getSize(); i++) {
+			if (D[i] < minCost && !nodes.get(i).isVisible()) {
+				minCost = D[i];
+				pivotW = nodes.get(i);				
+			}
+		}
+		
+		return pivotW;
 	}
 
 }

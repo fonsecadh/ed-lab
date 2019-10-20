@@ -18,9 +18,14 @@ public class GraphNode<T> {
 	private T element;
 	
 	/**
-	 * Represents if the element has been visited or not.
+	 * Represents if the node has been visited or not.
 	 */
 	private boolean visited;
+
+	/**
+	 * Represents if the node is visible or not.
+	 */
+	private boolean visible;
 	
 	
 	
@@ -53,6 +58,10 @@ public class GraphNode<T> {
 		return visited;
 	}
 	
+	public boolean isVisible() {
+		return visible;
+	}
+	
 	
 	// Setters
 	public void setElement(T element) {
@@ -62,6 +71,10 @@ public class GraphNode<T> {
 	public void setVisited(boolean visited) {
 		this.visited = visited;
 	}	
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 	
 	
 	// Methods
