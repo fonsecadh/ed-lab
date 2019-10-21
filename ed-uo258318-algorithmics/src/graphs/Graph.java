@@ -1,6 +1,7 @@
 package graphs;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -493,12 +494,12 @@ public class Graph<T> {
 	
 	/**
 	 * Traverses the graph using a Depth-First Search and then
-	 * returns a string with the visited nodes in order.
+	 * returns a string with the visited nodes in that order.
 	 * 
 	 * @param element
 	 * 			Element of the starting node.
 	 * @return
-	 * 			A string with the visited nodes in order.
+	 * 			A string with the visited nodes in that order.
 	 */
 	public String traverseGraphDF(T element) {
 		// We set all visited flags to false
@@ -787,6 +788,7 @@ public class Graph<T> {
 				}
 			}
 		}
+		
 		return pivotW;
 	}
 	
@@ -804,6 +806,190 @@ public class Graph<T> {
 		}
 		
 		return pivotW;
+	}
+	
+	/**
+	 * Traverses the graph using a Breath-First Search and then
+	 * returns a string with the visited nodes in that order.
+	 * 
+	 * @param element
+	 * 			Element of the starting node.
+	 * @return
+	 * 			A string with the visited nodes in that order.
+	 */
+	public String BFPrint(T element) {
+		// We set all visited flags to false
+		nodes.forEach(node -> node.setVisited(false));
+		
+		// We get the starting node
+		int startNode = getNode(element);	
+		
+		// We check if it exists
+		if (startNode == INDEX_NOT_FOUND) {
+			return null;
+		}
+		
+		return BFPrintAux(startNode);
+	}
+
+	private String BFPrintAux(int startNode) {
+		GraphNode<T> node = nodes.get(startNode);
+		
+		// Set visited flag to true
+		node.setVisited(true);
+		
+		// We create the string builder
+		StringBuilder sb = new StringBuilder();
+		
+		// We create a FIFO data structure
+		LinkedList<GraphNode<T>> fifo = new LinkedList<GraphNode<T>>();
+		
+		// We add the starting node
+		fifo.add(node);
+		
+		while (!fifo.isEmpty()) {			
+			// We append the information of the node
+			sb.append(fifo.getFirst().getElement().toString() + "-");
+			
+			// For each node reachable from that element
+			// (And not already visited)
+			nodes
+				.stream()
+				.filter(n -> n.isVisited() == false)
+				.filter(fn -> edges[getNode(fifo.getFirst().getElement())][getNode(fn.getElement())])
+				.collect(Collectors.toList())
+				.forEach(candidate -> {
+					candidate.setVisited(true);
+					fifo.add(candidate);
+				});
+			
+			// We remove the node
+			fifo.removeFirst();
+		}
+		
+		
+		// We return the string
+		return sb.toString();		
+	}
+	
+	/**
+	 * Returns the center of the graph, that is, the node 
+	 * closest to the farthest node. In other words, the node 
+	 * with minimum eccentricity.
+	 *  
+	 * @return
+	 * 			The element of the center of the graph.
+	 */
+	public T getCenter() {
+		// Execute Floyd's algorithm
+		floyd(getSize());
+		
+		// Minimum eccentricity
+		double minEccentricity = INFINITE;
+		
+		// Index of the center of the graph
+		int indexCenter = -1;
+		
+		// Obtain the node with minimum eccentricity
+		// (Minimum of the maximum values of each 
+		// column in the A matrix)
+		for (int i = 0; i < costMatrixA[0].length; i++) { // Cols
+			double eccentricity = 0;			
+			for (int j = 0; j < costMatrixA.length; j++) { // Rows
+				if (costMatrixA[j][i] > eccentricity) {
+					eccentricity = costMatrixA[j][i];
+				}
+			}
+			
+			if (eccentricity < minEccentricity) {
+				// Update minimum eccentricity
+				minEccentricity = eccentricity;
+				
+				// Update the index of the center
+				indexCenter = i;
+			}
+		}
+		
+		// We return the center of the graph
+		return nodes.get(indexCenter).getElement();
+	}	
+	
+	/**
+	 * Returns the shortest path length between two nodes.
+	 * 
+	 * @param origin
+	 * 			The origin node.
+	 * @param destination
+	 * 			The destination node.
+	 * @return
+	 * 			The shortest path length between the given nodes.
+	 * @throws Exception
+	 * 			If any of the nodes do not exist.
+	 */
+	public int shortestPathLength(T origin, T destination) {
+		// We get the index of the nodes
+		int indexOrigin = getNode(origin);
+		int indexDestination = getNode(destination);
+		
+		// We check that the nodes exist
+		if (indexOrigin == INDEX_NOT_FOUND || indexDestination == INDEX_NOT_FOUND) {
+			return -1;
+		}
+		
+		// We execute the modified version of Floyd's algorithm
+		// for getting the shortest path between two nodes
+		modifiedFloydShortestPath(getSize());
+		
+		// We get the shortest path between the origin and the 
+		// destination
+		return (int) costMatrixA[indexOrigin][indexDestination];
+	}
+	
+	private void initsModifiedFloydShortestPath() {
+		// We iterate the matrices
+		int currentSize = getSize();
+		
+		for (int i = 0; i < currentSize; i++) {
+			for (int j = 0; j < currentSize; j++) {
+				// We represent the lengths over A
+				if (edges[i][j] == false) {
+					costMatrixA[i][j] = INFINITE;
+				} else {
+					costMatrixA[i][j] = 1.0;					
+				}
+				
+				// We fill P with EMPTY values
+				pathwayMatrixP[i][j] = EMPTY;
+				
+				// We set the length of going from one node
+				// to itself to 0
+				costMatrixA[i][i] = 0;
+			}
+		}
+	}
+	
+	private void modifiedFloydShortestPath(int an) {
+		initsModifiedFloydShortestPath(); // We call the Auxiliary method
+		int currentSize = getSize();
+		
+		// Modified Floyd's Algorithm for getting the shortest path
+		// between two nodes
+		for (int k = 0; k < an; k++) {
+			for (int i = 0; i < currentSize; i++) {
+				for (int j = 0; j < currentSize; j++) {
+					// If the length of going from any node i 
+					// to any other node j through k is lower 
+					// than the length recorded so far
+					if (costMatrixA[i][k] + costMatrixA[k][j] < costMatrixA[i][j]) {
+						// We update the cost matrix A
+						costMatrixA[i][j] = costMatrixA[i][k] + costMatrixA[k][j];
+						
+						// We update the pathway matrix P
+						pathwayMatrixP[i][j] = k;
+					}
+				}
+			}
+		}
 	}
 
 }
