@@ -494,7 +494,7 @@ public class Graph<T> {
 	
 	/**
 	 * Traverses the graph using a Depth-First Search and then
-	 * returns a string with the visited nodes in that order.
+	 * returns a string with the visited nodes in Depth-First order.
 	 * 
 	 * @param element
 	 * 			Element of the starting node.
@@ -815,7 +815,7 @@ public class Graph<T> {
 	 * @param element
 	 * 			Element of the starting node.
 	 * @return
-	 * 			A string with the visited nodes in that order.
+	 * 			A string with the visited nodes in Breath-First order.
 	 */
 	public String BFPrint(T element) {
 		// We set all visited flags to false
