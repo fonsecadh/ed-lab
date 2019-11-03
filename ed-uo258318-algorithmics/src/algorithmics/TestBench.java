@@ -8,11 +8,15 @@ public class TestBench {
 
 	// Constants
 	public static final int SAMPLES = 3;
+	
 	public static final int STARTN = 1;
 	public static final int ENDN = 50;
 	public static final int ENDN_CUBIC = 20;
 	public static final int ENDN_POWREC1 = 12;
 	public static final int SLEEP_TIME = 2;
+	
+	public static final int STARTN_GRAPH = 100;
+	public static final int ENDN_GRAPH = 300;
 	
 	public static final String LINEAR = "linear.csv";
 	public static final String QUADRATIC = "quadratic.csv";
@@ -24,7 +28,12 @@ public class TestBench {
 	public static final String POWREC3 = "powrec3.csv";
 	public static final String POWREC4 = "powrec4.csv";
 	
-	public static final String CLASSNAME = "algorithmics.Algorithms";
+	public static final String GRAPH_FLOYD = "01_Graph_Floyd.txt";
+	public static final String GRAPH_DIJKSTRA = "02_Graph_Dijkstra.txt";
+	public static final String GRAPH_BUILD = "03_Graph_Build.txt";
+	
+//	public static final String CLASSNAME = "algorithmics.Algorithms";
+	public static final String CLASSNAME = "algorithmics.GraphPerformanceTest";
 	
 	
 
@@ -38,10 +47,15 @@ public class TestBench {
 //		TestBench.test(LOGARITHMIC, SAMPLES, STARTN, ENDN, "logarithmic");		
 		
 		// Second Lab Session
-		TestBench.test(POWREC1, SAMPLES, STARTN, ENDN_POWREC1, "powRec1");
-		TestBench.test(POWREC2, SAMPLES, STARTN, ENDN, "powRec2");
-		TestBench.test(POWREC3, SAMPLES, STARTN, ENDN, "powRec3");
-		TestBench.test(POWREC4, SAMPLES, STARTN, ENDN, "powRec4");
+//		TestBench.test(POWREC1, SAMPLES, STARTN, ENDN_POWREC1, "powRec1");
+//		TestBench.test(POWREC2, SAMPLES, STARTN, ENDN, "powRec2");
+//		TestBench.test(POWREC3, SAMPLES, STARTN, ENDN, "powRec3");
+//		TestBench.test(POWREC4, SAMPLES, STARTN, ENDN, "powRec4");
+		
+		// Graph Performance Test
+		TestBench.test(GRAPH_FLOYD, SAMPLES, STARTN_GRAPH, ENDN_GRAPH, "runFloyd");
+		TestBench.test(GRAPH_DIJKSTRA, SAMPLES, STARTN_GRAPH, ENDN_GRAPH, "runDijkstra");
+		TestBench.test(GRAPH_BUILD, SAMPLES, STARTN_GRAPH, ENDN_GRAPH, "initGraph");
 		
 	}
 
