@@ -11,25 +11,25 @@ class MyAVLTreeTest {
 		AVLTree<Character> a = new AVLTree<Character>();
 		
 		a.add('b');
-		assertEquals("b--", a.toString());
+		assertEquals("b(0)--", a.toString());
 		
 		a.add('a');
-		assertEquals("ba---", a.toString());
+		assertEquals("b(1)a(0)---", a.toString());
 		
 		a.add('d');
-		assertEquals("ba--d--", a.toString());
+		assertEquals("b(1)a(0)--d(0)--", a.toString());
 		
 		a.add('c');
-		assertEquals("ba--dc---", a.toString());
+		assertEquals("b(2)a(0)--d(1)c(0)---", a.toString());
 		
 		a.add('g');
-		assertEquals("ba--dc--g--", a.toString());
+		assertEquals("b(2)a(0)--d(1)c(0)--g(0)--", a.toString());
 		
 		a.add('i');
-		assertEquals("ba--dc--g-i--", a.toString());
+		assertEquals("b(3)a(0)--d(2)c(0)--g(1)-i(0)--", a.toString());
 		
 		a.add('h');
-		assertEquals("ba--dc--g-ih---", a.toString());
+		assertEquals("b(4)a(0)--d(3)c(0)--g(2)-i(1)h(0)---", a.toString());
 	}
 	
 	@Test
@@ -61,6 +61,25 @@ class MyAVLTreeTest {
 		a.add('h');
 		
 		assertEquals('i', a.getMax(a.getRoot()));
+	}
+	
+	@Test
+	void testRemove() {
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('b');		
+		a.add('a');		
+		a.add('d');
+		a.add('c');
+		a.add('g');
+		a.add('i');
+		a.add('h');
+		
+		assertEquals("b(4)a(0)--d(3)c(0)--g(2)-i(1)h(0)---", a.toString());
+		a.remove('b');
+		assertEquals("a(4)-d(3)c(0)--g(2)-i(1)h(0)---", a.toString());
+		a.remove('g');
+		assertEquals("a(3)-d(2)c(0)--i(1)h(0)---", a.toString());
 	}
 
 }

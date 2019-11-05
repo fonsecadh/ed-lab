@@ -6,7 +6,7 @@ public class AVLTree<T extends Comparable<T>> {
 	private AVLNode<T> root;
 
 	
-	
+
 	// Getters
 	public AVLNode<T> getRoot() {
 		return root;
@@ -62,6 +62,7 @@ public class AVLTree<T extends Comparable<T>> {
 			currentNode.setRight(add(currentNode.getRight(), element));
 		}
 		
+		currentNode.updateHeight();
 		return currentNode;
 	}
 	
@@ -87,6 +88,39 @@ public class AVLTree<T extends Comparable<T>> {
 		} else {			
 			return getMax(root.getRight());
 		}
+	}
+		
+	public void remove (T element) {
+		setRoot(removeAux(getRoot(), element));
+	}
+
+	private AVLNode<T> removeAux(AVLNode<T> currentNode, T element) {
+		if (currentNode == null) {
+			return null;
+		}
+		
+		if (element.compareTo(currentNode.getElement()) == 0) {			
+			return (currentNode.getLeft() == null) ? ((currentNode.getRight() == null) ? null : currentNode.getRight()) 
+					: ((currentNode.getRight() == null) ? currentNode.getLeft() 
+							: replaceAux(currentNode, getMax(currentNode.getLeft())));
+		}
+		
+		if (element.compareTo(currentNode.getElement()) < 0) {
+			currentNode.setLeft(removeAux(currentNode.getLeft(), element));
+		}
+		
+		if (element.compareTo(currentNode.getElement()) > 0) {
+			currentNode.setRight(removeAux(currentNode.getRight(), element));
+		} 
+		
+		currentNode.updateHeight();
+		return currentNode;
+	}
+
+	private AVLNode<T> replaceAux(AVLNode<T> currentNode, T max) {
+		currentNode.setElement(max);
+		currentNode.setLeft(removeAux(currentNode.getLeft(), max));
+		return currentNode;
 	}
 	
 }

@@ -6,6 +6,7 @@ public class AVLNode<T> {
 	private T element;
 	private AVLNode<T> left;
 	private AVLNode<T> right;
+	private int height;
 	
 	
 	
@@ -33,6 +34,10 @@ public class AVLNode<T> {
 	public AVLNode<T> getRight() {
 		return right;
 	}
+	
+	public int getHeight() {
+		return height;
+	}
 		
 	
 	// Setters
@@ -48,15 +53,27 @@ public class AVLNode<T> {
 		this.right = right;
 	}
 	
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	
 	
 	// ToString and Print
 	@Override
 	public String toString() {
-		return getElement().toString();
+		return getElement().toString() + "(" + getHeight() + ")";
 	}
 	
 	public void print() {
 		System.out.println(toString());
+	}
+	
+	
+	// Methods	
+	public void updateHeight() {
+		setHeight((left == null) ? ((right == null) ? 0 : right.getHeight() + 1)
+				: ((right == null) ? left.getHeight() + 1
+						: Math.max(left.getHeight(), right.getHeight()) + 1));
 	}
 
 }
