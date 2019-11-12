@@ -81,5 +81,41 @@ class MyAVLTreeTest {
 		a.remove('g');
 		assertEquals("a(3)-d(2)c(0)--i(1)h(0)---", a.toString());
 	}
+	
+	@Test
+	void testJoins() {		
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('b');		
+		a.add('a');		
+		a.add('d');
+		
+		AVLTree<Character> b = new AVLTree<Character>();
+		
+		b.add('c');
+		b.add('g');
+		b.add('i');
+		b.add('d');
+		
+		assertEquals("b(3)a(0)--d(2)c(0)--g(1)-i(0)--", a.joins(b).toString());
+	}
+	
+	@Test
+	void testIntersection() {		
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('b');		
+		a.add('a');		
+		a.add('d');
+		
+		AVLTree<Character> b = new AVLTree<Character>();
+		
+		b.add('c');
+		b.add('g');
+		b.add('i');
+		b.add('d');
+		
+		assertEquals("d(0)--", a.intersection(b).toString());
+	}
 
 }

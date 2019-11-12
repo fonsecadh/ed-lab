@@ -123,4 +123,41 @@ public class AVLTree<T extends Comparable<T>> {
 		return currentNode;
 	}
 	
+	public AVLTree<T> joins(AVLTree<T> tree) {
+		AVLTree<T> resultingTree = new AVLTree<T>();
+		joinsAux(root, resultingTree);
+		joinsAux(tree.getRoot(), resultingTree);
+		return resultingTree;
+	}
+
+	private void joinsAux(AVLNode<T> currentNode, AVLTree<T> resultingTree) {
+		if (currentNode != null) {
+			if (!resultingTree.search(currentNode.getElement())) {
+				resultingTree.add(currentNode.getElement());
+			}
+			joinsAux(currentNode.getLeft(), resultingTree);
+			joinsAux(currentNode.getRight(), resultingTree);
+		} 
+	}
+	
+	public AVLTree<T> intersection(AVLTree<T> tree) {
+		AVLTree<T> resultingTree = new AVLTree<T>();
+		intersectionAux(root, tree, resultingTree);
+		return resultingTree;
+	}
+
+	private void intersectionAux(AVLNode<T> currentNode, 
+			AVLTree<T> otherTree, AVLTree<T> resultingTree) {
+		if (currentNode == null) {
+			return;
+		}
+		
+		if (otherTree.search(currentNode.getElement())) {
+			resultingTree.add(currentNode.getElement());
+		}
+		
+		intersectionAux(currentNode.getLeft(), otherTree, resultingTree);
+		intersectionAux(currentNode.getRight(), otherTree, resultingTree);
+	}
+	
 }
