@@ -117,5 +117,21 @@ class MyAVLTreeTest {
 		
 		assertEquals("d(0)--", a.intersection(b).toString());
 	}
+	
+	@Test
+	void testBF() {
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('b');		
+		a.add('a');		
+		a.add('d');
+		a.add('c');
+		a.add('g');
+		a.add('i');
+		a.add('h');
+		
+		assertEquals("b(3)a(0)--d(2)c(0)--g(2)-i(-1)h(0)---", a.toString());
+	}
+	
 
 }

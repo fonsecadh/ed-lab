@@ -62,8 +62,7 @@ public class AVLTree<T extends Comparable<T>> {
 			currentNode.setRight(add(currentNode.getRight(), element));
 		}
 		
-		currentNode.updateHeight();
-		return currentNode;
+		return (updateBF(currentNode));
 	}
 	
 	public boolean search(T element) {
@@ -90,13 +89,13 @@ public class AVLTree<T extends Comparable<T>> {
 		}
 	}
 		
-	public void remove (T element) {
+	public void remove (T element) {		
 		setRoot(removeAux(getRoot(), element));
 	}
 
 	private AVLNode<T> removeAux(AVLNode<T> currentNode, T element) {
 		if (currentNode == null) {
-			return null;
+			throw new IllegalArgumentException("Node does not exist.");
 		}
 		
 		if (element.compareTo(currentNode.getElement()) == 0) {			
@@ -113,8 +112,7 @@ public class AVLTree<T extends Comparable<T>> {
 			currentNode.setRight(removeAux(currentNode.getRight(), element));
 		} 
 		
-		currentNode.updateHeight();
-		return currentNode;
+		return (updateBF(currentNode));
 	}
 
 	private AVLNode<T> replaceAux(AVLNode<T> currentNode, T max) {
@@ -158,6 +156,11 @@ public class AVLTree<T extends Comparable<T>> {
 		
 		intersectionAux(currentNode.getLeft(), otherTree, resultingTree);
 		intersectionAux(currentNode.getRight(), otherTree, resultingTree);
+	}
+	
+	private AVLNode<T> updateBF(AVLNode<T> theRoot) {
+		theRoot.updateHeight();
+		return theRoot;
 	}
 	
 }
