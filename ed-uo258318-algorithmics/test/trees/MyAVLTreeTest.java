@@ -14,22 +14,22 @@ class MyAVLTreeTest {
 		assertEquals("b(0)--", a.toString());
 		
 		a.add('a');
-		assertEquals("b(1)a(0)---", a.toString());
+		assertEquals("b(-1)a(0)---", a.toString());
 		
 		a.add('d');
-		assertEquals("b(1)a(0)--d(0)--", a.toString());
+		assertEquals("b(0)a(0)--d(0)--", a.toString());
 		
 		a.add('c');
-		assertEquals("b(2)a(0)--d(1)c(0)---", a.toString());
+		assertEquals("b(1)a(0)--d(-1)c(0)---", a.toString());
 		
 		a.add('g');
-		assertEquals("b(2)a(0)--d(1)c(0)--g(0)--", a.toString());
+		assertEquals("b(1)a(0)--d(0)c(0)--g(0)--", a.toString());
 		
 		a.add('i');
-		assertEquals("b(3)a(0)--d(2)c(0)--g(1)-i(0)--", a.toString());
+		assertEquals("d(0)b(0)a(0)--c(0)--g(1)-i(0)--", a.toString());
 		
 		a.add('h');
-		assertEquals("b(4)a(0)--d(3)c(0)--g(2)-i(1)h(0)---", a.toString());
+		assertEquals("d(0)b(0)a(0)--c(0)--h(0)g(0)--i(0)--", a.toString());
 	}
 	
 	@Test
@@ -75,20 +75,22 @@ class MyAVLTreeTest {
 		a.add('i');
 		a.add('h');
 		
-		assertEquals("b(4)a(0)--d(3)c(0)--g(2)-i(1)h(0)---", a.toString());
+		assertEquals("d(0)b(0)a(0)--c(0)--h(0)g(0)--i(0)--", a.toString());
 		a.remove('b');
-		assertEquals("a(4)-d(3)c(0)--g(2)-i(1)h(0)---", a.toString());
+		assertEquals("d(0)a(1)-c(0)--h(0)g(0)--i(0)--", a.toString());
 		a.remove('g');
-		assertEquals("a(3)-d(2)c(0)--i(1)h(0)---", a.toString());
+		assertEquals("d(0)a(1)-c(0)--h(1)-i(0)--", a.toString());
 	}
 	
 	@Test
 	void testJoins() {		
 		AVLTree<Character> a = new AVLTree<Character>();
 		
-		a.add('b');		
 		a.add('a');		
+		a.add('b');		
 		a.add('d');
+		
+		assertEquals("b(0)a(0)--d(0)--", a.toString());
 		
 		AVLTree<Character> b = new AVLTree<Character>();
 		
@@ -97,7 +99,10 @@ class MyAVLTreeTest {
 		b.add('i');
 		b.add('d');
 		
-		assertEquals("b(3)a(0)--d(2)c(0)--g(1)-i(0)--", a.joins(b).toString());
+		assertEquals("g(-1)c(1)-d(0)--i(0)--", b.toString());		
+		
+		
+		assertEquals("d(0)b(0)a(0)--c(0)--g(1)-i(0)--", a.joins(b).toString());
 	}
 	
 	@Test
@@ -130,7 +135,52 @@ class MyAVLTreeTest {
 		a.add('i');
 		a.add('h');
 		
-		assertEquals("b(3)a(0)--d(2)c(0)--g(2)-i(-1)h(0)---", a.toString());
+		assertEquals("d(0)b(0)a(0)--c(0)--h(0)g(0)--i(0)--", a.toString());
+	}
+	
+	@Test
+	void testSingleRotation() {
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('a');		
+		a.add('b');		
+		a.add('c');
+		a.add('d');
+		a.add('e');
+		
+		assertEquals("b(1)a(0)--d(0)c(0)--e(0)--", a.toString());
+		
+		a.add('f');
+		
+		assertEquals("d(0)b(0)a(0)--c(0)--e(1)-f(0)--", a.toString());
+	}
+	
+	@Test
+	void testDoubleRotation() {
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('e');		
+		a.add('g');		
+		a.add('b');
+		a.add('d');
+		a.add('c');
+		
+		assertEquals("e(-1)c(0)b(0)--d(0)--g(0)--", a.toString());
+	}
+	
+	@Test
+	void testTreeHeight() {
+		AVLTree<Character> a = new AVLTree<Character>();
+		
+		a.add('b');		
+		a.add('a');		
+		a.add('d');
+		a.add('c');
+		a.add('g');
+		a.add('i');
+		a.add('h');
+		
+		assertEquals(3, a.getHeight());
 	}
 	
 

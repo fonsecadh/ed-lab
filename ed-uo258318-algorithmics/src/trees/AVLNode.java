@@ -69,8 +69,8 @@ public class AVLNode<T> {
 				: ((right == null) ? left.getHeight() + 1 : Math.max(left.getHeight(), right.getHeight()) + 1));
 	}
 
-	private int getBF() {
-		return right == null ? (left == null ? 0 : 0 - left.getHeight() - 1)
+	public int getBF() {
+		return right == null ? (left == null ? 0 : -(left.getHeight() + 1))
 				: (left == null ? right.getHeight() + 1 : right.getHeight() - left.getHeight());
 	}	
 

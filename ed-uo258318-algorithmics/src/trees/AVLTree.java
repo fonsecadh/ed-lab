@@ -159,8 +159,91 @@ public class AVLTree<T extends Comparable<T>> {
 	}
 	
 	private AVLNode<T> updateBF(AVLNode<T> theRoot) {
+		if (theRoot.getBF() == -2) { // Left rotation
+			if (theRoot.getLeft().getBF() <= 0) {
+				theRoot = singleLeftRotation(theRoot);
+			} else {
+				theRoot = doubleLeftRotation(theRoot);
+			}
+		} else if (theRoot.getBF() == 2) { // Right rotation
+			if (theRoot.getRight().getBF() >= 0) {
+				theRoot = singleRightRotation(theRoot);
+			} else {
+				theRoot = doubleRightRotation(theRoot);
+			}
+		}		
+		
 		theRoot.updateHeight();
 		return theRoot;
 	}
+	
+
+	// Left Rotations
+	
+	private AVLNode<T> singleLeftRotation(AVLNode<T> b) {
+		AVLNode<T> a = b.getLeft();
+		b.setLeft(a.getRight());
+		a.setRight(b);
+		b.updateHeight();
+		
+		return a;
+	}
+
+	private AVLNode<T> doubleLeftRotation(AVLNode<T> c) {
+		AVLNode<T> a = c.getLeft();
+		AVLNode<T> b = a.getRight();
+		a.setRight(b.getLeft());
+		c.setLeft(b.getRight());
+		b.setLeft(a);
+		b.setRight(c);
+		a.updateHeight();
+		c.updateHeight();
+		
+		return b;
+	}
+	
+	
+	// Right Rotations
+
+	private AVLNode<T> singleRightRotation(AVLNode<T> b) {
+		AVLNode<T> a = b.getRight();
+		b.setRight(a.getLeft());
+		a.setLeft(b);
+		b.updateHeight();		
+		
+		return a;
+	}
+	
+	private AVLNode<T> doubleRightRotation(AVLNode<T> c) {
+		AVLNode<T> a = c.getRight();
+		AVLNode<T> b = a.getLeft();
+		a.setLeft(b.getRight());
+		c.setRight(b.getLeft());
+		b.setRight(a);
+		b.setLeft(c);
+		c.updateHeight();
+		a.updateHeight();
+		
+		return b;
+	}
+	
+	public int getHeight() {
+		return calculateHeight(getRoot(), 0);
+	}
+
+
+	private int calculateHeight(AVLNode<T> currentNode, int height) {
+		int heightLeft = height;
+		int heightRight = height;
+		height++;
+		
+		if (currentNode != null) {			
+			heightLeft = calculateHeight(currentNode.getLeft(), height);
+			heightRight = calculateHeight(currentNode.getRight(), height);
+		} 
+		
+		return Math.max(heightLeft, heightRight);
+	}
+
 	
 }
