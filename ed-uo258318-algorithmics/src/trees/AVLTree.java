@@ -101,7 +101,7 @@ public class AVLTree<T extends Comparable<T>> {
 		if (element.compareTo(currentNode.getElement()) == 0) {			
 			return (currentNode.getLeft() == null) ? ((currentNode.getRight() == null) ? null : currentNode.getRight()) 
 					: ((currentNode.getRight() == null) ? currentNode.getLeft() 
-							: replaceAux(currentNode, getMax(currentNode.getLeft())));
+							: updateBF(replaceAux(currentNode, getMax(currentNode.getLeft()))));
 		}
 		
 		if (element.compareTo(currentNode.getElement()) < 0) {
