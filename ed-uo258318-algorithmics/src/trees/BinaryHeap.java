@@ -1,6 +1,7 @@
 package trees;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class BinaryHeap<T extends Comparable<T>> {
@@ -13,6 +14,16 @@ public class BinaryHeap<T extends Comparable<T>> {
 	// Constructor
 	public BinaryHeap() {
 		this.heap = new ArrayList<T>();
+	}
+	
+	public BinaryHeap(T[] elements) {
+//		this.heap = new ArrayList<T>(Arrays.asList(elements));
+		this.heap = new ArrayList<T>();
+		Arrays.asList(elements).forEach(element -> add(element));		
+		this.heap
+			.stream()
+			.filter(e -> heap.indexOf(e) < heap.size() / 2)
+			.forEach(ele -> filterDown(heap.indexOf(ele)));
 	}
 	
 	
@@ -76,15 +87,20 @@ public class BinaryHeap<T extends Comparable<T>> {
 		return lSon.compareTo(rSon) < 0 ? leftSon : rightSon;
 	}
 
-
 	public void add(T element) {
 		heap.add(element);
 		filterUp(heap.size() - 1);
 	}
 	
 	public T getMin() {
-		T min = heap.get(heap.size() - 1);
-		return null;
+		T min = heap.get(0); // Root element
+		int lastIndex = heap.size() - 1; // Last element index
+		Collections.swap(heap, 0, lastIndex); // We swap their positions
+		heap.remove(lastIndex); // We remove the last element (previous root element)
+		filterDown(0); // We filter down the new root element
+		
+		// We return the previous root element
+		return min;
 	}	
 
 }
