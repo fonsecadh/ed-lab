@@ -17,13 +17,10 @@ public class BinaryHeap<T extends Comparable<T>> {
 	}
 	
 	public BinaryHeap(T[] elements) {
-//		this.heap = new ArrayList<T>(Arrays.asList(elements));
-		this.heap = new ArrayList<T>();
-		Arrays.asList(elements).forEach(element -> add(element));		
-		this.heap
-			.stream()
-			.filter(e -> heap.indexOf(e) < heap.size() / 2)
-			.forEach(ele -> filterDown(heap.indexOf(ele)));
+		this.heap = new ArrayList<T>(Arrays.asList(elements));
+		for (int i = (heap.size() / 2) - 1; i >= 0; i--) {
+			filterDown(i);
+		}
 	}
 	
 	

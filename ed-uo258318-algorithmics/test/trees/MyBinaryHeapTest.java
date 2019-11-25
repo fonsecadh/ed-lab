@@ -74,17 +74,17 @@ class MyBinaryHeapTest {
 	
 	@Test
 	void testConstructorWithArgs() {
-//		Integer[] aux = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1	};
-//		BinaryHeap<Integer> a = new BinaryHeap<Integer>(aux);		
-//		assertEquals(a.toString(), "[1, 2, 4, 3, 6, 5, 8, 10, 7, 9]");
+		Integer[] aux = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1	};
+		BinaryHeap<Integer> a = new BinaryHeap<Integer>(aux);		
+		assertEquals(a.toString(), "[1, 2, 4, 3, 6, 5, 8, 10, 7, 9]");
 		
-		Integer[] auxB = { 9, 8, 7, 6, 5, 1, 2, 3, 4 };
-		BinaryHeap<Integer> b = new BinaryHeap<Integer>(auxB);
-		assertEquals(b.toString(), "[1, 3, 2, 4, 7, 8, 5, 9, 6]");
-		
-		Character[] auxC = { 'f', 'g', 'a', 'z', 'd' };
-		BinaryHeap<Character> c = new BinaryHeap<Character>(auxC);
-		assertEquals(c.toString(), "[a, d, f, z, g]");
+//		Integer[] auxB = { 9, 8, 7, 6, 5, 1, 2, 3, 4 };
+//		BinaryHeap<Integer> b = new BinaryHeap<Integer>(auxB);
+//		assertEquals(b.toString(), "[1, 3, 2, 4, 7, 8, 5, 9, 6]");
+//		
+//		Character[] auxC = { 'f', 'g', 'a', 'z', 'd' };
+//		BinaryHeap<Character> c = new BinaryHeap<Character>(auxC);
+//		assertEquals(c.toString(), "[a, d, f, z, g]");
 	}
 
 }
