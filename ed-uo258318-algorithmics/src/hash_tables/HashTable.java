@@ -20,6 +20,8 @@ public class HashTable<T> {
 		this.minLF = minLF;
 	}
 	
+	
+	// Methods
 	protected int f(T element, int i) {
 		switch (redispersionType) {
 			case LINEAR_PROBING:
@@ -30,5 +32,5 @@ public class HashTable<T> {
 				return -1;
 		}
 	}
-
+	
 }

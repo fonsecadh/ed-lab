@@ -116,12 +116,21 @@ public class BinaryHeap<T extends Comparable<T>> {
 		}		
 		
 		// Swap and delete
-		Collections.swap(heap, pos, endPos);	
-		heap.remove(endPos); // We delete the element
-		--endPos; // Now the end position is reduced by one number		
-		for (int i = endPos / 2; i >= 0; i--) { // Filter down
-			filterDown(i);
+		forceFilterUp(pos);
+		getMin();		
+	}
+	
+	private void forceFilterUp(int pos) {	
+		// While pos is not the root 
+		while (pos != 0) {
+			int fatherPos = (pos - 1) / 2;
+			
+			// Swap always
+			Collections.swap(heap, pos, fatherPos);
+			pos = fatherPos;		
 		}
 	}
+	
+	
 
 }
