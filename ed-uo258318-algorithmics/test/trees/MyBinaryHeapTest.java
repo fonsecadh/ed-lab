@@ -29,19 +29,6 @@ class MyBinaryHeapTest {
 		b.add('z');
 		b.add('d');
 		assertEquals(b.toString(), "[a, d, f, z, g]");
-		
-//		BinaryHeap<Integer> c = new BinaryHeap<Integer>();
-//		c.add(10);
-//		c.add(9);
-//		c.add(8);
-//		c.add(7);
-//		c.add(6);
-//		c.add(5);
-//		c.add(4);
-//		c.add(3);
-//		c.add(2);
-//		c.add(1);
-//		assertEquals(c.toString(), "[1, 2, 4, 3, 6, 5, 8, 10, 7, 9]");
 	}
 	
 	@Test
@@ -77,14 +64,6 @@ class MyBinaryHeapTest {
 		Integer[] aux = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1	};
 		BinaryHeap<Integer> a = new BinaryHeap<Integer>(aux);		
 		assertEquals(a.toString(), "[1, 2, 4, 3, 6, 5, 8, 10, 7, 9]");
-		
-//		Integer[] auxB = { 9, 8, 7, 6, 5, 1, 2, 3, 4 };
-//		BinaryHeap<Integer> b = new BinaryHeap<Integer>(auxB);
-//		assertEquals(b.toString(), "[1, 3, 2, 4, 7, 8, 5, 9, 6]");
-//		
-//		Character[] auxC = { 'f', 'g', 'a', 'z', 'd' };
-//		BinaryHeap<Character> c = new BinaryHeap<Character>(auxC);
-//		assertEquals(c.toString(), "[a, d, f, z, g]");
 	}
 
 }

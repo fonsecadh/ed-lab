@@ -18,7 +18,7 @@ public class BinaryHeap<T extends Comparable<T>> {
 	
 	public BinaryHeap(T[] elements) {
 		this.heap = new ArrayList<T>(Arrays.asList(elements));
-		for (int i = (heap.size() / 2) - 1; i >= 0; i--) {
+		for (int i = heap.size() / 2; i >= 0; i--) {
 			filterDown(i);
 		}
 	}
@@ -38,7 +38,8 @@ public class BinaryHeap<T extends Comparable<T>> {
 		return heap.toString();
 	}
 	
-	private void filterUp(int pos) {		
+	private void filterUp(int pos) {	
+		// While pos is not the root 
 		while (pos != 0) {
 			int fatherPos = (pos - 1) / 2;
 			T father = heap.get(fatherPos);
@@ -99,5 +100,28 @@ public class BinaryHeap<T extends Comparable<T>> {
 		// We return the previous root element
 		return min;
 	}	
+	
+	public void remove(T element) {
+		// Get element position
+		int pos = heap.indexOf(element);
+		if (pos == -1) { // If the element does not exist
+			throw new IllegalArgumentException("Element does not exist.");
+		}		
+		
+		// Get end position
+		int endPos = heap.size() - 1;
+		if (pos == endPos) { // If it is the last element
+			heap.remove(pos);
+			return;
+		}		
+		
+		// Swap and delete
+		Collections.swap(heap, pos, endPos);	
+		heap.remove(endPos); // We delete the element
+		--endPos; // Now the end position is reduced by one number		
+		for (int i = endPos / 2; i >= 0; i--) { // Filter down
+			filterDown(i);
+		}
+	}
 
 }
