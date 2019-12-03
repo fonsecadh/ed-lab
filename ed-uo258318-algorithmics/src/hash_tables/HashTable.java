@@ -7,6 +7,7 @@ public class HashTable<T> {
 	// Constants
 	protected final static int LINEAR_PROBING = 0;
 	protected final static int QUADRATIC_PROBING = 1;
+	protected static final int DOUBLE_HASHING = 2;
 	
 	// Attributes
 	private int B = 7;
@@ -14,23 +15,24 @@ public class HashTable<T> {
 	private double minLF = 0.5;
 	private ArrayList<HashNode<T>> associativeArray;
 	private double n; // Elements in the Hash Table
+	private int R = 5;
 	
 	
 	
 	// Constructor	
 	public HashTable(int B, int redispersionType, double minLF) {
-		if (isPrime(B) 
-				&& (redispersionType == LINEAR_PROBING || redispersionType == QUADRATIC_PROBING) 
+		if ((redispersionType == LINEAR_PROBING || redispersionType == QUADRATIC_PROBING || redispersionType == DOUBLE_HASHING) 
 				&& minLF > 0
-				&& B > 0) { // Input validation
-			this.B = B;
+				&& B > 2) { // Input validation
+			this.B = isPrime(B) ? B : getNextPrimeNumber(B);
 			this.redispersionType = redispersionType;
 			this.minLF = minLF;	
+			this.R = getPrevPrimeNumber(this.B);
 		}
 		
 		// Initialize and fill array list
 		this.associativeArray = new ArrayList<HashNode<T>>();
-		for (int i = 0; i < B; i++) {
+		for (int i = 0; i < this.B; i++) {
 			this.associativeArray.add(new HashNode<T>());
 		}
 	}
@@ -43,10 +45,13 @@ public class HashTable<T> {
 				return linearProbing(element, i);
 			case QUADRATIC_PROBING:
 				return quadraticProbing(element, i);
+			case DOUBLE_HASHING:
+				return doubleHashing(element, i);
 			default:
 				return linearProbing(element, i);
 		}
 	}
+
 
 	private int linearProbing(T element, int i) {
 		return (element.hashCode() + i) % B;
@@ -55,7 +60,16 @@ public class HashTable<T> {
 	private int quadraticProbing(T element, int i) {
 		return (int) ((element.hashCode() + Math.pow(i, 2)) % B);
 	}	
+
+	private int doubleHashing(T element, int i) {
+		return Math.abs(element.hashCode() + i * h2(element.hashCode())) % B;
+	}
 	
+	private int h2(int x) {
+		return R - x % R;
+	}
+
+
 	public boolean isPrime(int n) {
 		// Base cases		
 		if (n < 2) {

@@ -18,7 +18,20 @@ class MyHashTableTest {
 		assertEquals(2, b.f(7, 0));
 		assertEquals(3, b.f(7, 1));
 		assertEquals(1, b.f(7, 2));
-		assertEquals(1, b.f(7, 3));		
+		assertEquals(1, b.f(7, 3));	
+		
+		HashTable<Integer> e = new HashTable<Integer>(5, HashTable.DOUBLE_HASHING, 0.5);		
+		assertEquals(2, e.f(7, 0));
+		assertEquals(4, e.f(7, 1));
+		assertEquals(1, e.f(7, 2));
+		assertEquals(3, e.f(7, 3));
+		assertEquals(0, e.f(7, 4));
+		
+		assertEquals(0, e.f(0, 0));
+		assertEquals(1, e.f(2, 4));
+		assertEquals(2, e.f(3, 3));
+		assertEquals(3, e.f(32, 1));
+		assertEquals(4, e.f(1045, 2));
 		
 		HashTable<Character> c = new HashTable<Character>(5, HashTable.LINEAR_PROBING, 0.5);		
 		assertEquals(0, c.f('A', 0));
@@ -31,6 +44,19 @@ class MyHashTableTest {
 		assertEquals(1, d.f('A', 1));
 		assertEquals(4, d.f('A', 2));
 		assertEquals(4, d.f('A', 3));
+		
+		HashTable<Character> f = new HashTable<Character>(5, HashTable.DOUBLE_HASHING, 0.5);		
+		assertEquals(0, f.f('A', 0));
+		assertEquals(1, f.f('A', 1));
+		assertEquals(2, f.f('A', 2));
+		assertEquals(3, f.f('A', 3));
+		assertEquals(4, f.f('A', 4));
+		
+		assertEquals(2, f.f('a', 0));
+		assertEquals(4, f.f('a', 1));
+		assertEquals(1, f.f('a', 2));
+		assertEquals(3, f.f('a', 3));
+		assertEquals(0, f.f('a', 4));
 	}
 	
 	@Test
@@ -78,8 +104,7 @@ class MyHashTableTest {
 		assertEquals(true, b.search(15));
 		assertEquals(false, b.search(24));
 		assertEquals(false, b.search(7));
-		assertEquals(false, b.search(23));
-		
+		assertEquals(false, b.search(23));		
 	}
 	
 	@Test
@@ -125,8 +150,7 @@ class MyHashTableTest {
 		assertEquals(5, a.getNextPrimeNumber(3));
 		
 		assertEquals(1129, a.getPrevPrimeNumber(1151));
-		assertEquals(1153, a.getNextPrimeNumber(1151));
-		
+		assertEquals(1153, a.getNextPrimeNumber(1151));		
 	}
 
 }
