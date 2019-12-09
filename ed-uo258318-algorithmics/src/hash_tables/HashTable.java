@@ -66,7 +66,7 @@ public class HashTable<T> {
 	}
 	
 	private int h2(int x) {
-		return R - x % R;
+		return R - (x % R);
 	}
 
 
@@ -147,6 +147,10 @@ public class HashTable<T> {
 			}
 			it++;
 		}
+		
+		if (getLF() > minLF) {
+			dynamicResize();
+		}
 	}
 	
 	public boolean search(T element) {
@@ -182,6 +186,32 @@ public class HashTable<T> {
 			}
 			it++;
 		}
+	}
+	
+	protected void dynamicResize(int newSize) {
+		initialize(newSize);
+		ArrayList<HashNode<T>> newAssocArray = new ArrayList<HashNode<T>>();
+		for (int i = 0; i < this.B; i++) {
+			newAssocArray.add(new HashNode<T>());
+		}
+		ArrayList<HashNode<T>> aux = new ArrayList<HashNode<T>>(this.associativeArray);
+		this.associativeArray = new ArrayList<HashNode<T>>(newAssocArray);
+		aux.forEach(n -> {
+			if (n.getStatus() == HashNode.VALID) {
+				add(n.getElement());					
+			}
+		});
+	}
+
+	private void initialize(int newSize) {
+		this.B = newSize;
+		this.R = getPrevPrimeNumber(this.B);
+		this.n = 0;
+	}
+	
+	protected void dynamicResize() {
+		int newSize = getNextPrimeNumber(this.B * 2);
+		dynamicResize(newSize);
 	}
 	
 	@Override

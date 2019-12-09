@@ -67,6 +67,38 @@ class MyHashTableTest {
 		a.add(24);
 		a.add(3);
 		assertEquals("[0] (1) = 24 - [1] (1) = 3 - [2] (0) = null - [3] (1) = 13 - [4] (1) = 4 - ", a.toString());
+						
+		HashTable<Integer> b = new HashTable<Integer>(5, HashTable.QUADRATIC_PROBING, 1.0);		
+		b.add(4);
+		b.add(13);
+		b.add(24);
+		b.add(3);
+		assertEquals("[0] (1) = 24 - [1] (0) = null - [2] (1) = 3 - [3] (1) = 13 - [4] (1) = 4 - ", b.toString());
+		assertEquals(true, b.search(3));
+		assertEquals(true, b.search(24));
+		assertEquals(false, b.search(7));
+		assertEquals(false, b.search(23));		
+		
+		HashTable<Integer> c = new HashTable<Integer>(5, HashTable.DOUBLE_HASHING, 1.0);
+		c.add(4);
+		c.add(13);
+		c.add(24);
+		c.add(3);
+		assertEquals("[0] (0) = null - [1] (1) = 3 - [2] (1) = 24 - [3] (1) = 13 - [4] (1) = 4 - ", c.toString());
+	}
+	
+	@Test
+	void testRemove() {
+		HashTable<Integer> a = new HashTable<Integer>(5, HashTable.LINEAR_PROBING, 1.0);		
+		a.add(4);
+		a.add(13);
+		a.add(24);
+		a.add(3);
+		assertEquals("[0] (1) = 24 - [1] (1) = 3 - [2] (0) = null - [3] (1) = 13 - [4] (1) = 4 - ", a.toString());
+		assertEquals(true, a.search(3));
+		assertEquals(true, a.search(24));
+		assertEquals(false, a.search(7));
+		assertEquals(false, a.search(23));
 		a.remove(24);
 		assertEquals("[0] (2) = 24 - [1] (1) = 3 - [2] (0) = null - [3] (1) = 13 - [4] (1) = 4 - ", a.toString());
 		assertEquals(true, a.search(3));
@@ -80,7 +112,6 @@ class MyHashTableTest {
 		assertEquals(false, a.search(24));
 		assertEquals(false, a.search(7));
 		assertEquals(false, a.search(23));
-		
 		
 		HashTable<Integer> b = new HashTable<Integer>(5, HashTable.QUADRATIC_PROBING, 1.0);		
 		b.add(4);
@@ -104,32 +135,33 @@ class MyHashTableTest {
 		assertEquals(true, b.search(15));
 		assertEquals(false, b.search(24));
 		assertEquals(false, b.search(7));
-		assertEquals(false, b.search(23));		
+		assertEquals(false, b.search(23));
+		
+		HashTable<Integer> c = new HashTable<Integer>(5, HashTable.DOUBLE_HASHING, 1.0);
+		c.add(4);
+		c.add(13);
+		c.add(24);
+		c.add(3);
+		assertEquals("[0] (0) = null - [1] (1) = 3 - [2] (1) = 24 - [3] (1) = 13 - [4] (1) = 4 - ", c.toString());
+		c.remove(24);
+		assertEquals("[0] (0) = null - [1] (1) = 3 - [2] (2) = 24 - [3] (1) = 13 - [4] (1) = 4 - ", c.toString());
+		assertEquals(true, c.search(3));
+		c.add(15);
+		assertEquals("[0] (1) = 15 - [1] (1) = 3 - [2] (2) = 24 - [3] (1) = 13 - [4] (1) = 4 - ", c.toString());
+		assertEquals(true, c.search(3));
 	}
 	
 	@Test
-	void testRemove() {
-		HashTable<Integer> a = new HashTable<Integer>(5, HashTable.LINEAR_PROBING, 1.0);		
+	void testDynamicResizing() {
+		HashTable<Integer> a = new HashTable<Integer>(5, HashTable.LINEAR_PROBING, 0.5);
 		a.add(4);
+		assertEquals(0.2, a.getLF(), 0.1);
 		a.add(13);
-		a.add(24);
-		a.add(3);
-		assertEquals("[0] (1) = 24 - [1] (1) = 3 - [2] (0) = null - [3] (1) = 13 - [4] (1) = 4 - ", a.toString());
-		assertEquals(true, a.search(3));
-		assertEquals(true, a.search(24));
-		assertEquals(false, a.search(7));
-		assertEquals(false, a.search(23));
-		
-		HashTable<Integer> b = new HashTable<Integer>(5, HashTable.QUADRATIC_PROBING, 1.0);		
-		b.add(4);
-		b.add(13);
-		b.add(24);
-		b.add(3);
-		assertEquals("[0] (1) = 24 - [1] (0) = null - [2] (1) = 3 - [3] (1) = 13 - [4] (1) = 4 - ", b.toString());
-		assertEquals(true, b.search(3));
-		assertEquals(true, b.search(24));
-		assertEquals(false, b.search(7));
-		assertEquals(false, b.search(23));
+		assertEquals(0.4, a.getLF(), 0.1);
+		assertEquals("[0] (0) = null - [1] (0) = null - [2] (0) = null - [3] (1) = 13 - [4] (1) = 4 - ", a.toString());
+		a.add(24); // Dinamic Resizing
+		assertEquals(0.27, a.getLF(), 0.1);
+		assertEquals("[0] (0) = null - [1] (0) = null - [2] (1) = 24 - [3] (1) = 13 - [4] (1) = 4 - [5] (0) = null - [6] (0) = null - [7] (0) = null - [8] (0) = null - [9] (0) = null - [10] (0) = null - ", a.toString());
 	}
 	
 	@Test
